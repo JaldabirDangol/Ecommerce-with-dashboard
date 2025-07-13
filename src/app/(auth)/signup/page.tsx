@@ -2,6 +2,7 @@ import Image from "next/image";
 import { SignupForm } from "@/components/client/signupform";
 
 
+
 export default function Signup() {
   return <div className="flex w-screen h-screen  bg-gray-600">
 
