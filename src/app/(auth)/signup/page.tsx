@@ -1,8 +1,8 @@
-import { LoginForm } from "@/components/client/loginform";
 import Image from "next/image";
+import { SignupForm } from "@/components/client/signupform";
 
 
-export default function Login() {
+export default function Signup() {
   return <div className="flex w-screen h-screen  bg-gray-600">
 
     <div className="max-w-xl hidden md:block w-1/2 h-screen relative ">
@@ -19,7 +19,8 @@ Now all you seek, from near to far, lives right here — wherever you are.</p>
     <div className="flex flex-col justify-center items-center w-full">
       <h1 className="text-3xl font-bold ">Welcone back to HexaMart </h1>
       <p className="gray-200 font-semibold text-xl text-center">Shop smart, pay less — quality products at unbeatable prices.</p>
-     <LoginForm/>
+
+      <SignupForm/>
     </div>
 
   </div>;
