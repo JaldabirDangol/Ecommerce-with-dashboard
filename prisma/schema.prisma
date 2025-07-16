@@ -63,9 +63,10 @@ model User {
   id             String    @id @default(cuid())
   email          String?   @unique
   emailVerified  DateTime?
-  profilePic     String?
+  image          String?
   password       String?  
-  username       String?  @unique
+  name           String? 
+  username       String? @unique
   role           Role @default(USER)
   cartItem       Cart?
   reviews        Review[]

@@ -3,7 +3,7 @@ export const Wishlist = ()=>{
     return(
         <div className="rounded-full bg-white">
 
-            <IoIosHeart className="w-8 h-8"/>
+            <IoIosHeart className="w-8 h-8 text-red-500"/>
         </div>
     )
 }

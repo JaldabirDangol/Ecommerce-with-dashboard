@@ -13,8 +13,9 @@ export default function ShopLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen overflow-y-auto bg-gray-100 text-gray-900">
+    <div className="overflow-y-auto text-gray-900">
       <Navbar/>
+      {children}
     </div>
   );
 }

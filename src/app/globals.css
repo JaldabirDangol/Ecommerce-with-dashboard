@@ -3,8 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* #D2DDDE main backgrund color*/
 
+@theme{
+  --color-main-500:#D2DDDE;  
+  --color-main-400:#E9F0F0;  
+  --color-main-300:#F3F5F5;
+  --color-main-200:#F6FAF4
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

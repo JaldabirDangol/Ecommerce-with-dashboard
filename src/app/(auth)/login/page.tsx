@@ -1,8 +1,16 @@
 import { LoginForm } from "@/components/client/loginform";
 import Image from "next/image";
 
+import { auth } from "@/app/auth";
+import { redirect } from "next/navigation";
 
-export default function Login() {
+export default async function Login() {
+   const session = await auth();
+
+  if(session?.user){
+    redirect("/")
+
+  }
   return <div className="flex w-screen h-screen  bg-gray-600">
 
     <div className="max-w-xl hidden md:block w-1/2 h-screen relative ">
