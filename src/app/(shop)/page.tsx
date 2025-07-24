@@ -5,7 +5,7 @@ import { ProductFeatureCard } from "@/components/productfeaturecard";
 
 export default function ShopPage() {
   return (
-    <div className="flex flex-col w-full mt-8 gap-4">
+    <div className="flex flex-col w-full mt-4 gap-4">
       <h2 className="text-2xl font-semibold">Welcome to the Shop!</h2>
       <p>Browse our products and enjoy your shopping experience.</p>
 

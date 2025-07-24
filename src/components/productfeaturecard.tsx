@@ -17,12 +17,15 @@ export const ProductFeatureCard = ({
 }: ProductFeatureCardProps) => {
   return (
     <div className="relative h-[200px] max-w-xl rounded-3xl overflow-hidden group shadow-md">
-      <Image
+     <div className="flex justify-center items-center bg-main-300 w-full">
+            <Image
         src={imageUrl}
         alt={title}
-        fill
-        className="object-contain transition duration-300 group-hover:scale-105"
+        width={300}
+        height={300}
+        className="object-contain transition duration-300 group-hover:scale-105 max-h-[90%] max-w-[90%]"
       />
+     </div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent z-10" />
 

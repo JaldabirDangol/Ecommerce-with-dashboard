@@ -8,7 +8,7 @@ import { NavMenu } from "@/components/navItems";
 export const Navbar = ()=>{
 
     return(
-        <header className="flex  justify-between items-center w-full py-3 px-4 rounded-3xl bg-main-400 sticky top-6">
+        <header className="flex  justify-between items-center w-full py-3 px-4 rounded-3xl bg-main-400 ">
          
          <div className="flex items-center gap-4">
                <Image src="/shopping-logo-design-template-bag-icon-135610427.webp" height={36} width={36} alt="logo" />

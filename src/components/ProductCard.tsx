@@ -11,17 +11,17 @@ interface ProductCardProps{
 
 const ProductCard = ({imageUrl,name,rating,price,description}:ProductCardProps) => {
   return (
-    <div className='flex flex-col w-[300px] bg-main-300  my-4 gap-2 rounded-2xl'>
-      <div className="w-[300px] h-[300px] overflow-hidden">
+    <div className='flex flex-col w-[320px] bg-main-300  my-4 gap-2  rounded-2xl'>
+      <div className="w-full flex justify-center items-center bg-white  h-[300px] overflow-hidden rounded-t-2xl">
   <Image
     src={imageUrl ?? ""}
     alt="product"
     width={300}
     height={300}
-    className="object-cover w-full h-full"
+    className="object-contain max-h-[90%] max-w-[90%]"
   />
 </div>
-<div className='p-2'> 
+<div className='p-2 '> 
  <h2 className='text-xl font-semibold'>{name}</h2>
       <h2>{description}</h2>
       <h2>rating - {rating}</h2>
