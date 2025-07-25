@@ -1,7 +1,6 @@
 import { CartItem } from "@/components/cartItem"
 import { Trash } from "lucide-react";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
-import { MdOutlineCheckBox } from "react-icons/md";
 const sampleProduct = {
   id: "prod_mac001",
   name: 'MacBook Pro 14" M3',
@@ -36,12 +35,10 @@ const sampleProduct = {
 const page = () => {
   return (
 
-   
-
       <div className="w-full h-full pt-2 flex justify-center gap-2">
 
         <div className="w-[65%] flex flex-col gap-4">
-           <div className="bg-white flex justify-between w-full mt-2 p-2">
+           <div className="bg-white flex justify-between w-full mt-2 p-2 rounded-2xl">
       <div className="flex gap-4 items-center">
             <MdOutlineCheckBoxOutlineBlank className="w-6 h-6"/>
            <p>SELECT ALL ITEMS</p>
@@ -58,9 +55,58 @@ const page = () => {
              <CartItem product={sampleProduct}/>
         </div>
 
-       <div className="w-[27%]">
-         price detail
-       </div>
+<div className="w-[27%] bg-white p-6 rounded-lg shadow-md h-full"> 
+  <h2 className="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2> 
+
+
+  {/* Shipping Details */}
+  <div className="flex justify-between items-center mb-3">
+    <p className="text-gray-700">Shipping</p>
+    <div className="flex items-center gap-3"> {/* Slightly increased gap */}
+      <p className="font-semibold text-gray-800">Rs. [Calculated Shipping]</p>
+      <button className="text-blue-600 text-sm hover:underline font-medium">Change</button> {/* Stronger hover */}
+    </div>
+  </div>
+
+  {/* Subtotal */}
+  <div className="flex justify-between items-center text-lg mb-3"> {/* Larger text, consistent spacing */}
+    <p className="text-gray-700">Subtotal</p>
+    <p className="font-semibold text-gray-800">Rs. [Calculated Subtotal]</p>
+  </div>
+  {/* Voucher Input */}
+  <div className="border-t border-b border-gray-200 py-4 my-4"> {/* Lighter border, more vertical padding */}
+    <label htmlFor="voucher" className="block text-sm font-medium text-gray-700 mb-2">
+      Have a voucher code?
+    </label>
+    <div className="flex gap-2">
+      <input
+        type="text"
+        id="voucher"
+        placeholder="Enter code" 
+        className="flex-grow p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" /* Better focus, subtle transition */
+      />
+      <button className="bg-blue-500 text-white py-2 px-5 rounded-md hover:bg-blue-600 transition duration-200 font-medium"> {/* Primary button style */}
+        Apply
+      </button>
+    </div>
+  </div>
+
+
+  <div className="flex justify-between items-center text-md mb-3 text-green-600"> {/* Green for discount */}
+    <p>Voucher Discount</p>
+    <p>- Rs. [Calculated Voucher Discount]</p>
+  </div>
+
+
+  <div className="flex justify-between border-t border-gray-300 pt-4 mt-4"> {/* Heavier top border for total */}
+    <p className="font-bold text-xl text-gray-800">Total</p> {/* Larger, bolder total */}
+    <p className="font-bold text-xl text-blue-700">Rs. [Calculated Total]</p> {/* Prominent total amount */}
+  </div>
+
+  <button className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200 text-lg font-semibold shadow-lg"> {/* Larger, more prominent button */}
+    Proceed to Checkout
+  </button>
+</div>
 
 
   </div>

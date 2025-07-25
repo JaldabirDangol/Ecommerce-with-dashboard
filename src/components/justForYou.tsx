@@ -90,7 +90,7 @@ const JustForYou = () => {
     <div className='flex flex-col w-full'>
       
       <h2>Just For You</h2>
-    <div className='flex flex-wrap gap-4 w-full justify-between p-4'>
+    <div className='flex flex-wrap gap-2 w-full justify-between p-4'>
        {
         products.map((product,idx)=>(
          <ProductCard
