@@ -8,7 +8,7 @@ const data = [
 ];
 
 export const SalesTargetChart = () => (
-  <div className="bg-white rounded-xl p-4 shadow max-w-[380px] h-90">
+  <div className="bg-white rounded-xl p-4 shadow w-1/3 h-93">
     <h2 className="text-md font-semibold mb-2">Sales Target</h2>
     <ResponsiveContainer width="100%" height="65%">
         <RadialBarChart

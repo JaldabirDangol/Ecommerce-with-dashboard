@@ -11,7 +11,7 @@ const data = [
 ];
 
 export const UserHitRateChart = () => (
-  <div className="bg-white rounded-xl p-4 shadow w-full h-72">
+  <div className="bg-white rounded-xl px-4 py-6 shadow w-full h-92 ">
     <h2 className="text-md font-semibold mb-2">User Hit Rate</h2>
     <ResponsiveContainer width="100%" height="90%">
       <LineChart data={data}>

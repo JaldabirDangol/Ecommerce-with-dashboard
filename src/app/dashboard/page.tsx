@@ -1,6 +1,7 @@
 import { DashboardCard } from "@/components/dashboard/dashboardCard";
 import { EarningsChart } from "@/components/dashboard/earninigChart";
 import { Header } from "@/components/dashboard/header";
+import { LeftSideBar } from "@/components/dashboard/leftSideBar";
 import RecentActivity from "@/components/dashboard/recentActivity";
 import { SalesTargetChart } from "@/components/dashboard/salesTargetChart";
 import { UserHitRateChart } from "@/components/dashboard/userHitRate";
@@ -33,9 +34,14 @@ import {
   ];
 
 const page = () => (
-  <div className="flex flex-col gap-4">
+  <div className="flex flex-col w-full h-full">
     <Header />
-    <div className="flex w-full justify-between">
+
+    <div className="w-full h-full flex gap-2">
+      <LeftSideBar/>
+  
+        <div className="w-full max-w-[83%] flex flex-col gap-4 py-4">
+           <div className="flex  w-full justify-between ">
       <DashboardCard
         title="Total Sales"
         icon={<DollarSign className="text-yellow-500" />}
@@ -63,6 +69,9 @@ const page = () => (
       <SalesTargetChart/>
      <RecentActivity activities={sampleActivities} />
     </div>
+        </div>
+    </div>
+ 
 
     <UserHitRateChart/>
   </div>

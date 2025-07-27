@@ -11,7 +11,7 @@ const data = [
 ];
 
 export const EarningsChart = () => (
-  <div className="bg-white rounded-xl p-4 shadow max-w-xl w-full h-72">
+  <div className="bg-white rounded-xl p-4 shadow  w-1/3 h-93">
     <h2 className="text-md font-semibold mb-2">Earning Statistics</h2>
     <ResponsiveContainer width="100%" height="90%">
       <BarChart data={data}>
