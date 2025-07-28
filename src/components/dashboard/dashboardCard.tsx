@@ -17,11 +17,12 @@ export const DashboardCard = ({
   trend,
 }: DashboardCardProps) => {
   return (
-    <div className="flex flex-col p-4 rounded-xl shadow bg-white gap-2 w-full max-w-[240px]">
+    <div className="flex flex-col p-4 rounded-xl shadow bg-white gap-4
+     w-full max-w-[250px]">
       <div className="flex justify-between items-center">
         <div>
-          <h4 className="text-sm font-medium text-gray-500">{title}</h4>
-          <p className="text-xs text-gray-400">{subtitle}</p>
+          <h4 className="text- font-medium text-gray-500">{title}</h4>
+          <p className="text-sm text-gray-400">{subtitle}</p>
         </div>
         <div className="text-xl">{icon}</div>
       </div>
@@ -29,7 +30,7 @@ export const DashboardCard = ({
       <div className="flex items-center gap-2 text-xl font-bold">
         <span
           className={`${
-            trend === "up" ? "text-green-500" : "text-red-500"
+            trend === "up" ? "text-green-500 text-xl font-bold" : "text-red-500 text-xl font-bold"
           } text-base`}
         >
           {trend === "up" ? "↑" : "↓"}

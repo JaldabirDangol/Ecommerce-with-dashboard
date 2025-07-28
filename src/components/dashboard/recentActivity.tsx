@@ -29,7 +29,7 @@ const RecentActivityItem = ({ icon, title, description, timeAgo }) => (
 
 const RecentActivity = ({ activities }) => {
   return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-md w-1/3 h-93">
+    <div className="bg-gray-100 p-6 rounded-lg shadow-md w-2/5 h-93">
       <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
       {activities.length === 0 ? (
         <p className="text-gray-600">No recent activity.</p>

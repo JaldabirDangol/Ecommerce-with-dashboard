@@ -1,42 +1,57 @@
 "use client"
+import { usePathname } from 'next/navigation'
 
 import {
   DollarSign,
   Home,
   Settings,
-  ShoppingCart, 
-  List,         
-  Ticket,       
-  Package      
-} from "lucide-react" 
-import { IoPerson } from "react-icons/io5" 
+  ShoppingCart,
+  List,
+  Ticket,
+} from "lucide-react"
+import { IoPerson } from "react-icons/io5"
+import Link from 'next/link'
+
 
 const sideBarItem = [
-  { name: 'Dashboard', icons: <Home /> },
-  { name: 'Products', icons: <ShoppingCart /> }, 
-  { name: 'Category', icons: <List /> },      
-  { name: 'Customers', icons: <IoPerson /> },
-  { name: 'Sells', icons: <DollarSign /> },
-  { name: 'Coupons', icons: <Ticket /> },     
-  { name: 'Settings', icons: <Settings /> },
-]
+  { name: 'Dashboard', icons: <Home />, href: '/dashboard' },
+  { name: 'Products', icons: <ShoppingCart />, href: '/dashboard/products' },
+  { name: 'Category', icons: <List />, href: '/dashboard/category' },
+  { name: 'Customers', icons: <IoPerson />, href: '/dashboard/customers' },
+  { name: 'Sells', icons: <DollarSign />, href: '/dashboard/sells' },
+  { name: 'Coupons', icons: <Ticket />, href: '/dashboard/coupons' },
+  { name: 'Settings', icons: <Settings />, href: '/dashboard/settings' },
+];
 
 export const LeftSideBar = () => {
-  return (
-    <div className="w-[15%]  p-4">
-     
-    
-    {sideBarItem.map((item)=>(
-      <div key={item.name} className="hover:bg-green-500 font-semibold text-gray-500
-      rounded-2xl hover:text-white flex items-center hover:cursor-pointer p-2
-      gap-2">
+  const pathname = usePathname()
 
-        {item.icons}  {item.name}
-    
-      </div>
-    ))
-    
-    
-    }</div>
+  return (
+
+    <div className="w-[15%] p-4 text-gray-300 min-h-screen"> 
+      {sideBarItem.map((item) => {
+        const isActive = pathname === item.href;
+        return (
+        
+          <Link
+            href={item.href}
+            key={item.name}
+            className={`
+              flex items-center p-2 rounded-lg gap-2 text-md transition-colors duration-200 ease-in-out
+              ${isActive
+                ? 'bg-green-600 text-white font-semibold shadow-md' 
+                : 'text-gray-600 hover:bg-gray-700 hover:text-white font-medium' // 
+              }
+              mb-2 {/* Added margin-bottom for spacing between items */}
+            `}
+          >
+            <span className="text-xl"> 
+              {item.icons}
+            </span>
+            <span>{item.name}</span>
+          </Link>
+        )
+      })}
+    </div>
   )
 }
