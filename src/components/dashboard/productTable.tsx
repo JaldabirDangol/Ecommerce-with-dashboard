@@ -6,6 +6,7 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import Image from "next/image";
+import ToggleSwitch from "./toggleSwitchTable";
 
 type Product = {
   image?: string;
@@ -13,37 +14,42 @@ type Product = {
   price: number;
   status: boolean;
   id?: string;
+  stock:number;
 };
 
 const data: Product[] = [
   {
     id: "prod1",
-    image: "/images/product1.jpg",
+    image: "/monitor.webp",
     name: "Wireless Headphones",
     price: 99.99,
     status: true,
+    stock:23
   },
   {
     id: "prod2",
-    image: "/images/product2.jpg",
+    image: "/earbud.jpg",
     name: "Smartwatch",
     price: 199.5,
     status: false,
+     stock:34
   },
   {
     id: "prod3",
-    image: "/images/product3.jpg",
+    image: '/samsung-galaxy-s23.png',
     name: "Ergonomic Mouse",
     price: 45.0,
     status: true,
+     stock:0
   },
   {
     id: "prod4",
-    image: "/images/product4.jpg",
+    image:  "/macbook-pro-m4.jpg",
     name: "USB-C Hub",
     price: 29.99,
     status: true,
-  },
+     stock:98,
+  }
 ];
 
 const columns: ColumnDef<Product>[] = [
@@ -79,17 +85,22 @@ const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "status",
-    header: "In Stock",
-    cell: ({ getValue }) => (
-      <span
-        className={`px-2 py-1 rounded text-white text-sm ${
-          getValue<boolean>() ? "bg-green-500" : "bg-red-500"
-        }`}
-      >
-        {getValue<boolean>() ? "Available" : "Out of Stock"}
-      </span>
-    ),
+    header: "status",
+    cell: ({ getValue }) => {
+    const status = getValue<boolean>();
+    return <ToggleSwitch value={status} />;
   },
+  },
+  {
+    accessorKey:"stock",
+    header:"stock",
+    cell:({getValue})=>(
+      <span>
+       {getValue<number>()}
+      </span>
+    )
+  }
+  
 ];
 
 const ProductTable = () => {
