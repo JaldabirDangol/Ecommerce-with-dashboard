@@ -8,10 +8,10 @@ export default function ImageUpload() {
   console.log(imageUrl)
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 w-full h-full">
  
 
- <div className="relative w-[265px] h-[265px] rounded-lg shadow flex justify-center items-center bg-gray-100">
+ <div className="relative w-full   max-w-[400px] h-[350px] rounded-lg shadow flex justify-center items-center bg-gray-100">
         {imageUrl ? (
           <Image
             src={imageUrl}

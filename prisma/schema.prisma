@@ -97,10 +97,16 @@ model Product{
   id                          String @id @default(cuid())
   name                        String  @unique
   description                 String?
-  isPublished                 Boolean  @default(false)
+  isPublished                 Boolean?  @default(true)
   price                       Float
   stock                       Int
-  image                       String?
+  brand                       String?
+  warrenty                    String?
+  dimensions                  String?
+  images                      String[]
+  colorOptions                String[]
+  weight                      String?
+  material                    String?
   cartItems                   CartItem[]
   orderItems                  OrderItem[]
   wishlist                    WishlistItem[]
@@ -119,7 +125,7 @@ model Review {
   id          String   @id @default(cuid())
   userId      String
   productId   String
-  rating      Int
+  rating      Int?
   description String?
 
   user        User     @relation(fields: [userId], references: [id])
