@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import ImageUpload from "@/components/uploadImage";
 import { useActionState, useEffect } from "react";
 import { createProductHandler } from "@/actions/product";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -20,7 +21,7 @@ const formSchema = z.object({
   dimensions: z.string().optional(),
   weight: z.string().optional(),
   material: z.string().optional(),
-  images: z.array(z.string().url("Must be a valid URL")).nonempty("At least one image is required"),
+  images: z.array(z.url("Must be a valid URL")).nonempty("At least one image is required"),
   colorOptions: z.array(z.string().min(1, "Color option cannot be empty")).optional(),
 });
 
@@ -63,6 +64,7 @@ export default function Page() {
   useEffect(() => {
     if (state.success) {
       console.log(state.message);
+      toast(state.message)
       methods.reset();
     }
     if (state.error) {
@@ -112,17 +114,13 @@ export default function Page() {
             ))}
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2"> 
             <div className="flex gap-4 flex-col items-start">
               <label htmlFor="images" className="block text-lg font-medium text-gray-700">
                 Images
               </label>
-              <ImageUpload
-                onChange={(urls: string[]) => methods.setValue("images", urls, { shouldValidate: true })}
-              />
-              {methods.watch("images").map((url, i) => (
-                <input type="hidden" key={i} value={url} {...methods.register("images")} />
-              ))}
+              <ImageUpload/>
+            
               {methods.formState.errors.images && (
                 <p className="text-red-500 text-xs mt-1">{methods.formState.errors.images.message}</p>
               )}

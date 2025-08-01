@@ -25,7 +25,7 @@ export const createProductHandler = async (
 ): Promise<{ error?: string; success?: boolean; message?: string }> => {
   try {
     const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
+    const description = formData.get("description") as string | null;
     const category = formData.get("category") as string;
     const price = parseFloat(formData.get("price") as string);
     const stock = parseInt(formData.get("stock") as string, 10);
@@ -36,7 +36,6 @@ export const createProductHandler = async (
     const material = formData.get("material") as string;
     const images = formData.getAll("images") as string[];
     const colorOptions = formData.getAll("colorOptions") as string[];
-
 
     const parsedData = formSchema.safeParse({
       name,
@@ -53,14 +52,19 @@ export const createProductHandler = async (
       colorOptions: colorOptions.length > 0 ? colorOptions : undefined,
     });
 
-    if (!parsedData.success) {
-      const fieldErrors = parsedData.error.errors
-        .map((err) => `${err.path.join(".")}: ${err.message}`)
-        .join(", ");
-      return { error: "Validation failed", success: false, message: fieldErrors };
-    }
+    
+if (!parsedData.success) {
+  const fieldErrors = parsedData.error.issues
+    .map((err) => `${err.path.join(".")}: ${err.message}`)
+    .join(", ");
+
+  return { error: "Validation failed", success: false, message: fieldErrors };
+}
+
 
     const productData = parsedData.data;
+
+    console.log(productData.images)
 
     await prisma.product.create({
       data: {

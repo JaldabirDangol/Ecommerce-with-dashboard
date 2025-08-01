@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { CldUploadWidget } from "next-cloudinary";
-import { useState } from "react";
+import {  useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export default function ImageUpload() {
@@ -10,14 +10,19 @@ export default function ImageUpload() {
 
   const [localImages, setLocalImages] = useState<string[]>(() => getValues("images") || []);
 
+
   const handleUploadSuccess = (result: any) => {
     const newUrl = result.info.secure_url;
-    const updatedImages = [...localImages, newUrl];
-    setLocalImages(updatedImages);
-    setValue("images", updatedImages, { shouldValidate: true });
+
+    setLocalImages((prev) => {
+    const updated = [...prev, newUrl];
+    setValue("images", updated, { shouldValidate: true }); // ✅ use updated
+    return updated;
+  });
+
+    console.log("local images ",localImages)
   };
 
-  // Remove image handler by index
   const removeImage = (index: number) => {
     const updatedImages = localImages.filter((_, i) => i !== index);
     setLocalImages(updatedImages);
