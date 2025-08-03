@@ -2,8 +2,20 @@ import Categories  from "@/components/categories";
 import { Hovercard } from "@/components/hoverCard";
 import JustForYou from "@/components/justForYou";
 import { ProductFeatureCard } from "@/components/productfeaturecard";
+import { prisma } from "@/lib/db";
 
-export default function ShopPage() {
+export default async function ShopPage() {
+
+  const product1 = await prisma.product.findUnique({
+    where:{
+      id:"cmdvbws2v0002h1e4cvlr4vsw"
+    }
+  })
+    const product2 = await prisma.product.findUnique({
+    where:{
+      id:"cmdu32n280001h1xoeec7457c"
+    }
+  })
   return (
     <div className="flex flex-col w-full mt-4 gap-4">
       <h2 className="text-2xl font-semibold">Welcome to the Shop!</h2>
@@ -19,13 +31,13 @@ export default function ShopPage() {
   <ProductFeatureCard
         title="New Gen X-Bud"
         imageUrl="/earbud.jpg"
-        href="/products/x-bud"
+        href={`/product/${product2?.id}`}
       />
 <ProductFeatureCard
   title="UltraSharp 6K Monitor"
   subtitle="Crystal clarity for pro creators"
   imageUrl="/monitor.webp"
-  href="/products/monitor"
+  href={`/product/${product1?.id}`}
 />
       </div>
 </div>

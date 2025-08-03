@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 interface ProductCardProps{
+    id:string
     imageUrl?:string,
     name:string,
     rating?:number,
@@ -10,9 +11,9 @@ interface ProductCardProps{
     description?:string
 }
 
-const ProductCard = ({imageUrl,name,rating,price,description}:ProductCardProps) => {
+const ProductCard = ({imageUrl,name,rating,price,description,id}:ProductCardProps) => {
   return (
-   <Link href={`/product/${name}`} passHref>
+   <Link href={`/product/${id}`} passHref>
   
       <div className='flex flex-col w-[320px] bg-main-300 my-2 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer'> {/* Added cursor-pointer for better UX */}
         <div className="w-full flex justify-center items-center bg-white h-[300px] overflow-hidden rounded-t-2xl">

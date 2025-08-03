@@ -1,5 +1,6 @@
 import ThumbnailGallery from "@/components/thumbnailGallery";
 import { prisma } from "@/lib/db";
+import { notFound } from "next/navigation";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
@@ -9,8 +10,8 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
     where: { id: resolvedParams.id },
   });
 
-  if (!product) {
-    throw new Error("Product not found");
+ if (!product) {
+    notFound();
   }
 
   return (
@@ -32,7 +33,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
             <div className="flex items-baseline gap-2">
               <p className="text-3xl font-bold text-green-600">
-                ${product.price.toFixed(2)}
+                रु{product.price.toFixed(2)}
               </p>
               <p className="text-sm text-gray-500">
                 {product.stock > 0
@@ -48,20 +49,19 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   <button
                     key={index}
                     className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                    aria-label={`Select color ${color.name}`}
+                    aria-label={`Select color ${color}`}
                   >
                     <span
                       className="w-4 h-4 rounded-full border border-gray-200"
-                      style={{ backgroundColor: color.hex }}
+                      style={{ backgroundColor: color }}
                     />
-                    {color.name}
+                    {color}
                   </button>
                 ))}
               </div>
             </div>
 
 
-            {/* Quantity Selector */}
             <div className="flex gap-2">
             <div>
                 <h2 className="text-lg font-semibold text-gray-800 mb-2">Quantity</h2>
@@ -69,23 +69,23 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <button
                   className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Decrease quantity"
-                  disabled // Add logic to enable/disable
+                  disabled 
                 >
                   -
                 </button>
                 <input
                   type="number"
-                  value={1} // Use state for quantity
+                  value={1} 
                   min="1"
                   max={product.stock}
                   className="w-16 text-center text-xl font-semibold border border-gray-300 rounded-lg py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   aria-label="Product quantity"
-                  readOnly // Set to false if you want direct input
+                  readOnly 
                 />
                 <button
                   className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Increase quantity"
-                  disabled={1 >= product.stock} // Add logic to enable/disable
+                  disabled={1 >= product.stock} 
                 >
                   +
                 </button>
@@ -111,7 +111,6 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 ">
             <button
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition transform hover:scale-105 active:scale-95 shadow-md"
@@ -130,7 +129,6 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
 
-        {/* Key Specs / Additional Info */}
         <div className="flex flex-col w-full lg:w-1/5 bg-gray-100 rounded-2xl p-6 gap-3 shadow-inner">
           <h2 className="text-xl font-bold text-gray-800 border-b pb-3 mb-2 border-gray-200">
             Key Specifications
@@ -147,7 +145,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             </p>
             <p className="flex justify-between">
               <strong className="font-semibold">Category:</strong>{" "}
-              <span>{product.category}</span>
+              <span>{product.categoryId}</span>
             </p>
             <p className="flex justify-between">
               <strong className="font-semibold">Availability:</strong>{" "}
@@ -161,7 +159,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             </p>
             <p className="flex justify-between">
               <strong className="font-semibold">Warranty:</strong>{" "}
-              <span>{product.warranty}</span>
+              <span>{product.warrenty}</span>
             </p>
             {product.reviewsCount > 0 && (
                 <p className="flex justify-between">

@@ -37,6 +37,7 @@ CREATE TABLE "Product" (
     "description" TEXT,
     "isPublished" BOOLEAN NOT NULL DEFAULT false,
     "price" DOUBLE PRECISION NOT NULL,
+
     "stock" INTEGER NOT NULL,
     "image" TEXT,
     "categoryId" TEXT NOT NULL,
@@ -214,3 +215,6 @@ ALTER TABLE "WishlistItem" ADD CONSTRAINT "WishlistItem_wishlistId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "WishlistItem" ADD CONSTRAINT "WishlistItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+    ALTER TABLE "ProductCategory" ADD COLUMN slug VARCHAR(255);
+

@@ -86,6 +86,7 @@ model ProductCategory{
   name         String  @unique
   products     Product[] 
   image        String?
+  slug         String?
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

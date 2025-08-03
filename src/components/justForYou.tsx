@@ -1,91 +1,15 @@
 import React from 'react'
 import ProductCard from '@/components/ProductCard'
-const products = [
-  {
-     imageUrl: "/macbook-pro-m4.jpg",
-    name: 'MacBook Pro 16-inch',
-    rating: 4.8,
-    price: 2499,
-    description: 'Powerful laptop with Apple M1 Pro chip and Retina display.',
-  },
-  {
-      imageUrl: "/smartwatch.webp",
-    name: 'AirPods Pro',
-    rating: 4.5,
-    price: 249,
-    description: 'Wireless earbuds with noise cancellation.',
-  },
-  {
-    imageUrl: '/samsung-galaxy-s23.png',
-    name: 'Samsung Galaxy S23',
-    rating: 4.3,
-    price: 799,
-    description: 'Flagship smartphone with AMOLED display.',
-  }, {
-     imageUrl: "/macbook-pro-m4.jpg",
-    name: 'MacBook Pro 16-inch',
-    rating: 4.8,
-    price: 2499,
-    description: 'Powerful laptop with Apple M1 Pro chip and Retina display.',
-  },
-  {
-      imageUrl: "/smartwatch.webp",
-    name: 'AirPods Pro',
-    rating: 4.5,
-    price: 249,
-    description: 'Wireless earbuds with noise cancellation.',
-  },
-  {
-    imageUrl: '/samsung-galaxy-s23.png',
-    name: 'Samsung Galaxy S23',
-    rating: 4.3,
-    price: 799,
-    description: 'Flagship smartphone with AMOLED display.',
-  }, {
-     imageUrl: "/macbook-pro-m4.jpg",
-    name: 'MacBook Pro 16-inch',
-    rating: 4.8,
-    price: 2499,
-    description: 'Powerful laptop with Apple M1 Pro chip and Retina display.',
-  },
-  {
-      imageUrl: "/smartwatch.webp",
-    name: 'AirPods Pro',
-    rating: 4.5,
-    price: 249,
-    description: 'Wireless earbuds with noise cancellation.',
-  },
-  {
-    imageUrl: '/samsung-galaxy-s23.png',
-    name: 'Samsung Galaxy S23',
-    rating: 4.3,
-    price: 799,
-    description: 'Flagship smartphone with AMOLED display.',
-  }, {
-     imageUrl: "/macbook-pro-m4.jpg",
-    name: 'MacBook Pro 16-inch',
-    rating: 4.8,
-    price: 2499,
-    description: 'Powerful laptop with Apple M1 Pro chip and Retina display.',
-  },
-  {
-      imageUrl: "/smartwatch.webp",
-    name: 'AirPods Pro',
-    rating: 4.5,
-    price: 249,
-    description: 'Wireless earbuds with noise cancellation.',
-  },
-  {
-    imageUrl: '/samsung-galaxy-s23.png',
-    name: 'Samsung Galaxy S23',
-    rating: 4.3,
-    price: 799,
-    description: 'Flagship smartphone with AMOLED display.',
-  },
- 
-]
+import {prisma} from "@/lib/db"
 
-const JustForYou = () => {
+
+
+const JustForYou =async () => {
+
+  const products = await prisma.product.findMany({
+      take:12,
+      orderBy:{createdAt:"desc"}
+  })
   return (
     <div className='flex flex-col w-full'>
       
@@ -95,11 +19,13 @@ const JustForYou = () => {
         products.map((product,idx)=>(
          <ProductCard
           key={idx}
-          imageUrl={product.imageUrl}
+          id={product.id}
+          imageUrl={product.images[0]}
           name={product.name}
-          rating={product.rating}
+          rating={(product as any).rating ?? 0} 
           price={product.price}
-          description={product.description}
+          description={product.description ?? "No description available"}
+
         />
         ))
        }

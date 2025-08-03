@@ -7,13 +7,12 @@ import {
 } from "@/components/ui/carousel";
 import { CarasouelCard } from "@/components/carssouelProduct"
 
-// Sample product data
 const products = [
   {
     title: "iPhone 16 Pro Max",
     description: "Experience the power of the A17 chip and stunning camera system in your palm.",
     label: "📱 Premium Smartphone",
-    imageUrl: "/iphone-16-pro-max.webp", // put the image in /public/products
+    imageUrl: "/iphone-16-pro-max.webp", 
   },
   {
     title: "MacBook Pro M4",

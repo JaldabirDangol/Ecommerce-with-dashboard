@@ -21,9 +21,8 @@ export const ProductFeatureCard = ({
             <Image
         src={imageUrl}
         alt={title}
-        width={300}
-        height={300}
-        className="object-contain transition duration-300 group-hover:scale-105 max-h-[90%] max-w-[90%]"
+        fill
+        className="object-contain transition duration-300 group-hover:scale-105  max-w-[90%]"
       />
      </div>
 
