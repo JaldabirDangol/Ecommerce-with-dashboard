@@ -22,7 +22,7 @@ export const CarasouelCard = ({ title, description, label, imageUrl }: ProductCa
         <p className="text-sm text-gray-600">{description}</p>
 
        <Link
-  href="/products"
+  href="/product"
   className="flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full hover:bg-gray-800 transition w-fit mt-2"
 >
   View All Products <ArrowUpRight className="size-4" />
