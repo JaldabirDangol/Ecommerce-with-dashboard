@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import ImageUpload from "@/components/uploadImage";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createProductHandler } from "@/actions/product";
 import { toast } from "sonner";
 
@@ -60,10 +60,30 @@ export default function Page() {
 
   const initialState = { error: undefined, success: false, message: "" };
   const [state, formAction] = useActionState(createProductHandler, initialState);
+  
+
+  const [categories,setCategories] = useState<{name:string,image:string}[]>([]);
+
+  useEffect(()=>{
+    const fetchCategories = async()=>{
+      try{
+        const res = await fetch("/api/product/category");
+
+        if(!res.ok) throw new Error("Failed to fetch categories");
+        const data = await res.json();
+
+        setCategories(data);
+      }
+    catch(err){
+      console.log(err)
+    }
+  };
+
+  fetchCategories();
+  },[])
 
   useEffect(() => {
     if (state.success) {
-      console.log(state.message);
       toast(state.message)
       methods.reset();
     }
@@ -126,31 +146,28 @@ export default function Page() {
               )}
             </div>
 
-            <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                Category
-              </label>
-              <select
-                id="category"
-                {...methods.register("category")}
-                className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-gray-700"
-              >
-                <option value="">-- Select Category --</option>
-                <option value="smartphones">Smartphones</option>
-                <option value="laptops">Laptops</option>
-                <option value="tablets">Tablets</option>
-                <option value="accessories">Accessories</option>
-                <option value="smartwatches">Smartwatches</option>
-                <option value="headphones">Headphones & Earbuds</option>
-                <option value="cameras">Cameras</option>
-                <option value="tv">Televisions</option>
-                <option value="gaming">Gaming Consoles</option>
-                <option value="home-appliances">Home Appliances</option>
-              </select>
-              {methods.formState.errors.category && (
-                <p className="text-red-500 text-xs mt-1">{methods.formState.errors.category.message}</p>
-              )}
-            </div>
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+              Category
+            </label>
+            <select
+              id="category"
+              {...methods.register("category")}
+              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-gray-700"
+            >
+              <option value="">-- Select Category --</option>
+              {categories.map((cat) => (
+                <option key={cat.name} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            {methods.formState.errors.category && (
+              <p className="text-red-500 text-xs mt-1">
+                {methods.formState.errors.category.message}
+              </p>
+            )}
+          </div>
 
             <div>
               <label htmlFor="colorOptions" className="block text-sm font-medium text-gray-700">

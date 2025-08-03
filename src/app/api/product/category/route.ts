@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const categories = await prisma.product.findMany();
+    const categories = await prisma.productCategory.findMany();
     return NextResponse.json(categories);
   } catch (error: any) {
     console.error(error);

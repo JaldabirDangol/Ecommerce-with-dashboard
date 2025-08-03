@@ -17,8 +17,8 @@ export default function UploadForm() {
 
 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  const form = e.currentTarget; 
-  const formData = new FormData(form);
+  const formElement = e.currentTarget; 
+  const formData = new FormData(formElement);
 
   if (imageUrl) {
     formData.append("image", imageUrl);
@@ -43,15 +43,16 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
       if (data?.success) {
         toast.success(data.message);
-        form.reset(); // safe now
         setImageUrl(null);
+        formElement.reset(); 
       }
     } catch (error: any) {
-      console.log(error.message);
-      toast.error(error.message);
+      console.error("Submission error:", error.message);
+      toast.error(error.message || "Submission failed");
     }
   });
 };
+
 
 
   return (

@@ -1,4 +1,4 @@
-import { Categories } from "@/components/categories";
+import Categories  from "@/components/categories";
 import { Hovercard } from "@/components/hoverCard";
 import JustForYou from "@/components/justForYou";
 import { ProductFeatureCard } from "@/components/productfeaturecard";
