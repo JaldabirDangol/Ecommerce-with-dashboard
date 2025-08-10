@@ -80,7 +80,7 @@ const ReviewSection = async({id}:{id:string}) => {
         {
           reviews &&  reviews.map((review)=>(
                 <div key={review.id} className="w-full flex flex-col">
-                <p>{review.description}</p> 
+                <p>{review.descriptions}</p> 
                 </div>
             ))
         }
