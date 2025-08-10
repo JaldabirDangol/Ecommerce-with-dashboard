@@ -1,3 +1,4 @@
+import ReviewSection from "@/components/reviewSection";
 import ThumbnailGallery from "@/components/thumbnailGallery";
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
@@ -15,7 +16,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   return (
-    <section className="w-full h-full pt-2">
+    <section className="w-full h-full pt-2 flex flex-col gap-2">
       <article className="flex flex-col lg:flex-row gap-8 bg-white p-6 md:p-8 rounded-2xl shadow-xl max-w-9xl mx-auto">
      <ThumbnailGallery images={product.images} productName={product.name} />
 
@@ -188,6 +189,8 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       </article>
+
+      <ReviewSection id={resolvedParams.id} />
     </section>
   );
 };

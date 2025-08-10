@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
+import {Collapse} from "react-collapse"
 
 const BrandFilter = ({ brands }: { brands: { brand: string }[] }) => {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [brandCollapse, setBrandCollapse]  = useState(true)
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>
@@ -14,8 +16,11 @@ const BrandFilter = ({ brands }: { brands: { brand: string }[] }) => {
 
   return (
     <div className="w-full ">
-      <h2 className="text-lg text-gray-500">Brand</h2>
-      <div className="flex flex-col gap-2">
+      <h2 onClick={()=>setBrandCollapse(!brandCollapse)} className="text-lg text-gray-500 hover:cursor-pointer">Brand</h2>
+      <Collapse isOpened={brandCollapse} theme={{
+    collapse: 'transition-all duration-500 ease-in-out overflow-hidden'
+  }}
+   className="flex flex-col gap-2">
         {brands.map((item) => (
           <label key={item.brand} className="flex items-center gap-2">
             <input
@@ -26,7 +31,7 @@ const BrandFilter = ({ brands }: { brands: { brand: string }[] }) => {
             {item.brand}
           </label>
         ))}
-      </div>
+      </Collapse>
 
   
       <div className="mt-2 text-sm text-gray-600">

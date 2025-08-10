@@ -15,14 +15,14 @@ const ProductCard = ({imageUrl,name,rating,price,description,id}:ProductCardProp
   return (
    <Link href={`/product/${id}`} passHref>
   
-      <div className='flex flex-col w-[320px] bg-main-300 my-2 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer'> {/* Added cursor-pointer for better UX */}
-        <div className="w-full flex justify-center items-center bg-white h-[300px] overflow-hidden rounded-t-2xl">
+      <div className='flex flex-col w-[320px] bg-main-300 my-2 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer'> 
+        <div className="w-full flex justify-center items-center bg-white h-[280px] overflow-hidden rounded-t-2xl">
           <Image
             src={imageUrl ?? ""}
             alt={name}
             width={300}
             height={300}
-            className="object-contain max-h-[90%] max-w-[90%]"
+            className="object-contain max-h-[95%] max-w-[90%]"
           />
         </div>
         <div className='p-4'>

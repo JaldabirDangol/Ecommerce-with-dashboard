@@ -1,5 +1,6 @@
 import BrandFilter from "@/components/brandFilter"
 import { prisma } from "@/lib/db"
+import CategoryFilter from "./categoryFilter";
 
 const BrandFetcher = async () => {
   const brands = await prisma.product.findMany({
@@ -35,10 +36,6 @@ const ProductFilter = async () => {
     const categories = await CategoryFetcher();
     const color = await ColorFetcher();
 
-    console.log("color",color)
-
-    console.log(categories)
-
   return ( 
     <div className="max-w-[20%] w-full flex flex-col gap-2 bg-white p-4">
         
@@ -46,14 +43,7 @@ const ProductFilter = async () => {
         
         <hr className="w-full"/>
 
-            <h2 className="text-lg text-gray-500">categories</h2>
-        {
-            categories &&  categories.map((item)=>(
-                <div key={item.id} className="hover:cursor-pointer">
-                   {item.name}
-                </div>
-            ))
-        }
+      <CategoryFilter categories={categories}/>
 
         <hr className="w-full"/>
             {
