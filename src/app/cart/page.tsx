@@ -19,13 +19,15 @@ const cartFetcher = async()=>{
 
   return NextResponse.json(userWithCart?.cartItem?.items || []);
 }
+
+
 const sampleProduct = {
   id: "prod_mac001",
   name: 'MacBook Pro 14" M3',
   description:
     "Experience unparalleled performance with the Apple M3 chip, featuring an 8-core CPU and 10-core GPU. Boasting 16GB RAM and a lightning-fast 512GB SSD, all showcased on a stunning Liquid Retina XDR display.",
   price: 1999.99,
-  images: [ // Changed 'image' to 'images' to hold multiple image paths
+  images: [ 
     "/macbook-pro-m4.jpg",
         "/smartwatch.webp",
     '/samsung-galaxy-s23.png',
@@ -34,7 +36,7 @@ const sampleProduct = {
 
 };
 
-const page =async () => {
+const cartPage =async () => {
   const cartItems = await cartFetcher();
 
 
@@ -118,4 +120,4 @@ const page =async () => {
   )
 }
 
-export default page
+export default cartPage

@@ -14,12 +14,32 @@ interface ProductDetailSelectorType {
 const ProductDetailSelector = ({ id, colorOptions, stock, name, description ,price}: ProductDetailSelectorType) => {
   const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
   const [quantity, setQuantity] = useState(1);
-  
-
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const addToCartHandler = () => {
-    addToCart({
+
+  const addToCartHandler = async() => {
+    const res = await fetch(`/api/cart`,{
+      method:"POST",
+      body: JSON.stringify({
+      id,
+      name,
+      color: selectedColor,
+      quantity,
+      price,
+      description,
+})
+    
+
+
+
+  })
+
+
+if(!res.ok){
+  throw new Error("Failed to add item to cart");
+  
+}
+   addToCart({
       productId:id,
       productName:name,
       color: selectedColor,
@@ -27,7 +47,9 @@ const ProductDetailSelector = ({ id, colorOptions, stock, name, description ,pri
       price,
       description,
     });
-  };
+
+    console.log(useCartStore.getState().items)
+}
 
   return (
     <div className="flex flex-col gap-4">

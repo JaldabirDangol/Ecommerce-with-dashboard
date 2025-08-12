@@ -1,43 +1,45 @@
-import {create} from "zustand";
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 interface CartItem {
-    productId:string;
-    productName:string;
-    quantity:number;
-    price:number;
-    description:string;
-    color:string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+  description: string;
+  color: string;
 }
-
 
 interface CartState {
-    items:CartItem[];
-    addToCart:(item:CartItem)=>void;
-    removeFromCart:(productId: string)=>void;
+  items: CartItem[];
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (productId: string) => void;
 }
 
-export const useCartStore = create<CartState>((set)=>({
-    items:[],
-    addToCart:(newItem)=>set((state)=>{
-       const exists = state.items.find(i=>i.productId === newItem.productId);
+export const useCartStore = create<CartState>(
+  devtools((set) => ({
+    items: [],
 
- if (exists) {
-  return {
-    items: state.items.map(i =>
-      i.productId === newItem.productId
-        ? { ...i, quantity: i.quantity + newItem.quantity }
-        : i
-    ),
-  };
-}
-  return { items: [...state.items, newItem] };
-    }),
+    addToCart: (newItem) =>
+      set((state) => {
+        const exists = state.items.find(i => i.productId === newItem.productId);
+        if (exists) {
+          return {
+            items: state.items.map(i =>
+              i.productId === newItem.productId
+                ? { ...i, quantity: i.quantity + newItem.quantity }
+                : i
+            ),
+          };
+        }
+        return { items: [...state.items, newItem] };
+      }),
 
+    removeFromCart: (productId) =>
+      set((state) => ({
+        items: state.items.filter(item => item.productId !== productId),
+      })),
+  }))
+);
 
-   removeFromCart: (productId) =>
-  set((state) => ({
-    items: state.items.filter(item => item.productId !== productId)
-  })),
-
-
-}))
+window.store = useCartStore;

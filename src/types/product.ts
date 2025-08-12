@@ -14,3 +14,13 @@ export interface Product {
   colorOptions?: string[];
   material?: string;
 }
+
+export interface ProductDetailSelectorType {
+  id: string;
+  colorOptions: string[];
+  stock?: number;
+  name: string;
+  quantity?:number;
+  description: string;
+  price:number
+}
