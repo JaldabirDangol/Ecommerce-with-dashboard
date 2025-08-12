@@ -1,38 +1,43 @@
 import { CartItem } from "@/components/cartItem"
 import { Trash } from "lucide-react";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
+import { prisma } from "@/lib/db";
+import {auth} from "@/app/auth"
+import { NextResponse } from "next/server";
+
+
+const cartFetcher = async()=>{
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Not Authenticated" }, { status: 401 });
+  }
+ const userId = session.user.id;
+  const userWithCart = await prisma.user.findUnique({
+    where:{id:userId},
+    include:{cartItem:{include:{items:true}}}
+  })
+
+  return NextResponse.json(userWithCart?.cartItem?.items || []);
+}
 const sampleProduct = {
   id: "prod_mac001",
   name: 'MacBook Pro 14" M3',
   description:
     "Experience unparalleled performance with the Apple M3 chip, featuring an 8-core CPU and 10-core GPU. Boasting 16GB RAM and a lightning-fast 512GB SSD, all showcased on a stunning Liquid Retina XDR display.",
-  isPublished: true,
   price: 1999.99,
-  stock: 12,
   images: [ // Changed 'image' to 'images' to hold multiple image paths
     "/macbook-pro-m4.jpg",
         "/smartwatch.webp",
     '/samsung-galaxy-s23.png',
        "/macbook-pro-m4.jpg",
   ],
-  category: "Laptops", // Changed categoryId to a more readable string
-  brand: "Apple", // Added brand directly
-  colorOptions: [ // Added an array for color options
-    { name: "Silver", hex: "#C0C0C0" },
-    { name: "Space Gray", hex: "#56595B" },
-    { name: "Midnight", hex: "#1C1C1E" },
-  ],
-  warranty: "1 Year", // Added warranty info
-  reviewsCount: 45, // Example: number of reviews
-  averageRating: 4.8, // Example: average rating
 
-  dimensions: '0.61"H x 12.31"W',
-  
-  weight: '3.5 lbs (1.6 kg)',
-  material: "Aluminum Enclosure",
 };
 
-const page = () => {
+const page =async () => {
+  const cartItems = await cartFetcher();
+
+
   return (
 
       <div className="w-full h-full pt-2 flex justify-center gap-2">

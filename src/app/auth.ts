@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
-    debug: true, // Enable debug mode to see what's happening
+    debug: true, 
     pages: {
       signIn: '/login',
     },
@@ -64,6 +64,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
    session: {
     strategy: "database",
+  },
+  callbacks: {
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id; 
+      }
+      return session;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 })
