@@ -1,6 +1,7 @@
 "use client";
 import { useCartStore } from "@/store/cartStore";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface ProductDetailSelectorType {
   id: string;
@@ -28,10 +29,6 @@ const ProductDetailSelector = ({ id, colorOptions, stock, name, description ,pri
       price,
       description,
 })
-    
-
-
-
   })
 
 
@@ -39,6 +36,10 @@ if(!res.ok){
   throw new Error("Failed to add item to cart");
   
 }
+
+const data = await res.json();
+toast(data?.message)
+
    addToCart({
       productId:id,
       productName:name,
