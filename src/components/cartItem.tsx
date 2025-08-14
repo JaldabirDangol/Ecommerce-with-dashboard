@@ -1,34 +1,28 @@
 "use client"
 
+import { deleteCartItem} from "@/actions/cart";
 import { Heart, Trash } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { MdOutlineCheckBox } from "react-icons/md";
 import { toast } from "sonner";
 
 export const CartItem = ({item}:any)=>{
   const [ticked , setTicked] = useState(false);
+  const [isPending, startTransition] = useTransition()
 
   const deleteCartItemHandler= async()=>{
-       try {
-      const res = await fetch('/api/cart',{
-        method:"DELETE",
-        body:JSON.stringify({cartItemId:item.id}),
-      })
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to delete item from cart');
-      }
-
-      const data = await res.json();
-      toast(data.message)
+    startTransition(async()=>{
+ try {
+      const res = await deleteCartItem(item.id)
+      toast(res.message)
       
        } catch (error) {
          console.log(error)
-         
        }
+    })
+      
   }
 
     return (
@@ -62,13 +56,14 @@ export const CartItem = ({item}:any)=>{
   </button>
 
   {/* Delete Button */}
-  <button
-    className="p-2 rounded-full border hover:bg-gray-200 transition"
-    title="Delete Product"
-    onClick={deleteCartItemHandler}
-  >
-    <Trash className="w-5 h-5 text-gray-600" />
-  </button>
+ <button
+            className="p-2 rounded-full border hover:bg-gray-200 transition"
+            title="Delete Product"
+            onClick={deleteCartItemHandler}
+            disabled={isPending} // 👈 Disable while deleting
+          >
+            {isPending ? <div className="spinner"></div> : <Trash className="w-5 h-5 text-gray-600" />}
+          </button>
 </div>
    </div>
 

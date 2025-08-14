@@ -1,7 +1,10 @@
 "use client";
 import { useCartStore } from "@/store/cartStore";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { toast } from "sonner";
+import {updateCartItem} from "@/actions/cart"
+import { useRouter } from "next/navigation";
+
 
 interface ProductDetailSelectorType {
   id: string;
@@ -16,41 +19,36 @@ const ProductDetailSelector = ({ id, colorOptions, stock, name, description ,pri
   const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
   const [quantity, setQuantity] = useState(1);
   const addToCart = useCartStore((state) => state.addToCart);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter()
 
 
-  const addToCartHandler = async() => {
-    const res = await fetch(`/api/cart`,{
-      method:"POST",
-      body: JSON.stringify({
-      id,
-      name,
-      color: selectedColor,
-      quantity,
-      price,
-      description,
-})
-  })
+ const addToCartHandler = async() => {
 
+    startTransition(async () => {
+        try {
+            const result = await updateCartItem({
+                productId: id,
+                quantity: quantity,
+            });
+            
+            toast(result.message);
+            router.push("/cart");
 
-if(!res.ok){
-  throw new Error("Failed to add item to cart");
-  
-}
+            addToCart({
+                productId: id,
+                productName: name,
+                color: selectedColor,
+                quantity,
+                price,
+                description,
+            });
 
-const data = await res.json();
-toast(data?.message)
-
-   addToCart({
-      productId:id,
-      productName:name,
-      color: selectedColor,
-      quantity,
-      price,
-      description,
+        } catch (error: any) {
+            toast(error.message || 'Failed to add item to cart');
+        }
     });
-
-    console.log(useCartStore.getState().items)
-}
+};
 
   return (
     <div className="flex flex-col gap-4">
@@ -128,7 +126,7 @@ toast(data?.message)
       <div className="flex flex-col sm:flex-row gap-4">
         <button
           className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition transform hover:scale-105 active:scale-95 shadow-md"
-          disabled={stock === 0}
+          disabled={stock === 0 || isPending}
           onClick={addToCartHandler}
         >
           Add to Cart
