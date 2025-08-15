@@ -13,7 +13,7 @@ const JustForYou =async () => {
   return (
     <div className='flex flex-col w-full'>
       
-      <h2>Just For You</h2>
+      <h2 className='text-2xl font-semibold '>Just For You</h2>
     <div className='flex flex-wrap gap-2 w-full p-4'>
        {
         products.map((product,idx)=>(

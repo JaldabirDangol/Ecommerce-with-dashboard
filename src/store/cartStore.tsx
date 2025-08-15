@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware"; // Import persist
 
 interface CartItem {
   productId: string;
@@ -16,30 +16,35 @@ interface CartState {
   removeFromCart: (productId: string) => void;
 }
 
-export const useCartStore = create<CartState>(
-  devtools((set) => ({
-    items: [],
-
-    addToCart: (newItem) =>
-      set((state) => {
-        const exists = state.items.find(i => i.productId === newItem.productId);
-        if (exists) {
-          return {
-            items: state.items.map(i =>
-              i.productId === newItem.productId
-                ? { ...i, quantity: i.quantity + newItem.quantity }
-                : i
-            ),
-          };
-        }
-        return { items: [...state.items, newItem] };
+export const useCartStore = create(
+  devtools<CartState>(
+    persist( 
+      (set) => ({
+        items: [],
+        addToCart: (newItem) =>
+          set((state) => {
+            const exists = state.items.find(
+              (i) => i.productId === newItem.productId
+            );
+            if (exists) {
+              return {
+                items: state.items.map((i) =>
+                  i.productId === newItem.productId
+                    ? { ...i, quantity: i.quantity + newItem.quantity }
+                    : i
+                ),
+              };
+            }
+            return { items: [...state.items, newItem] };
+          }),
+        removeFromCart: (productId) =>
+          set((state) => ({
+            items: state.items.filter((item) => item.productId !== productId),
+          })),
       }),
-
-    removeFromCart: (productId) =>
-      set((state) => ({
-        items: state.items.filter(item => item.productId !== productId),
-      })),
-  }))
+      {
+        name: "cart-storage", 
+      }
+    )
+  )
 );
-
-window.store = useCartStore;
