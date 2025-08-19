@@ -1,6 +1,7 @@
 "use client"
 
 import { deleteCartItem} from "@/actions/cart";
+import { useCartStore } from "@/store/cartStore";
 import { Heart, Trash } from "lucide-react";
 import Image from "next/image";
 import { useState, useTransition } from "react";
@@ -10,13 +11,16 @@ import { toast } from "sonner";
 
 export const CartItem = ({item}:any)=>{
   const [ticked , setTicked] = useState(false);
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
+  const removeFromCart = useCartStore((state)=>state.removeFromCart)
 
   const deleteCartItemHandler= async()=>{
     startTransition(async()=>{
  try {
       const res = await deleteCartItem(item.id)
       toast(res.message)
+
+       removeFromCart(item.product.id)
       
        } catch (error) {
          console.log(error)
@@ -47,7 +51,6 @@ export const CartItem = ({item}:any)=>{
     <h2>{item.product.price}</h2>
      
   <div className="flex gap-2">
-  {/* Wishlist Button */}
   <button
     className="p-2 rounded-full border hover:bg-red-100 transition"
     title="Add to Wishlist"
@@ -55,12 +58,11 @@ export const CartItem = ({item}:any)=>{
     <Heart className="w-5 h-5 text-red-500" />
   </button>
 
-  {/* Delete Button */}
  <button
             className="p-2 rounded-full border hover:bg-gray-200 transition"
             title="Delete Product"
             onClick={deleteCartItemHandler}
-            disabled={isPending} // 👈 Disable while deleting
+            disabled={isPending} 
           >
             {isPending ? <div className="spinner"></div> : <Trash className="w-5 h-5 text-gray-600" />}
           </button>
