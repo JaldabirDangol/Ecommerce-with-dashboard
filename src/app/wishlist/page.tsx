@@ -7,6 +7,8 @@ import { useWishListStore } from "@/store/wishListStore";
 import { CartItem, WishlistItem } from "@/types/product";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/store/cartStore";
+import { updateCartItem } from "@/actions/cart";
+import { toast } from "sonner";
 
 const WishlistPage = () => {
   const { items, removeFromWishList } = useWishListStore();
@@ -16,37 +18,54 @@ const WishlistPage = () => {
     removeFromWishList(itemId);
   };
 
-  const moveToCart = (item:WishlistItem)=>{
-       const cartItem:CartItem = {
-         productId: item.id,
-  productName: item.name,
-  quantity: 1,
-  price: item.price,
-  description: item.description || "",
-      }
-    addToCart(cartItem)
-    removeFromWishList(item.id)
-  }
- const handleMoveAllToCart = () => {
-    items.forEach((item) => {
+ const moveToCart = async (item: WishlistItem) => {
+  const cartItem: CartItem = {
+    productId: item.id,
+    productName: item.name,
+    quantity: 1,
+    price: item.price,
+    description: item.description || "",
+  };
 
-      const cartItem:CartItem = {
-         productId: item.id,
-  productName: item.name,
-  quantity: 1,
-  price: item.price,
-  description: item.description || "",
-      }
-      addToCart(cartItem); 
+  const result = await updateCartItem({
+    productId: item.id,
+    quantity: 1,
+  });
+
+  
+  if (result.success) {
+    toast(result.message); 
+    addToCart(cartItem);
+    removeFromWishList(item.id);
+  }
+};
+
+const handleMoveAllToCart = async () => {
+  for (const item of items) {
+
+    const cartItem: CartItem = {
+      productId: item.id,
+      productName: item.name,
+      quantity: 1,
+      price: item.price,
+      description: item.description || "",
+    };
+
+    const result = await updateCartItem({
+      productId: item.id,
+      quantity: 1,
     });
 
-    items.forEach((item)=>
-    removeFromWishList(item.id))
-  };
+    if (result.success) {
+      addToCart(cartItem);
+    }
+  }
+
+  items.forEach((item) => removeFromWishList(item.id));
+};
 
   return (
     <div className="flex w-full h-full p-6 gap-6">
-      {/* Wishlist items */}
       <div className="flex flex-col flex-1 gap-4">
         <h1 className="text-2xl font-semibold mb-4">My Wishlist</h1>
         {items.length === 0 ? (
@@ -61,9 +80,9 @@ const WishlistPage = () => {
                 <Image
                   src={item.image}
                   alt={item.name}
-                  width={80}
-                  height={80}
-                  className="rounded-xl object-cover"
+                  width={100}
+                  height={100}
+                  className="rounded-xl w-20 h-20 object-cover"
                 />
                 <div>
                   <h2 className="font-medium">{item.name}</h2>

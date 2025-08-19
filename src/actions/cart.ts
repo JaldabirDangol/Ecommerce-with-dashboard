@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { auth } from "@/app/auth";
+import { success } from "zod";
 
 export async function updateCartItem(data: {
   productId: string;
@@ -44,7 +45,7 @@ export async function updateCartItem(data: {
       });
     }
 
-    return { message: "Cart updated successfully" };
+    return { message: "Cart updated successfully" ,success:true};
   } catch (error) {
     throw new Error("Failed to update cart");
   }
