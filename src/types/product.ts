@@ -15,6 +15,14 @@ export interface Product {
   material?: string;
 }
 
+export interface CartItem {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+  description: string;
+  color?: string;
+}
 export interface ProductDetailSelectorType {
   id: string;
   colorOptions: string[];

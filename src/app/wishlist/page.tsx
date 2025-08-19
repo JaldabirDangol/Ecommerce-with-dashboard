@@ -3,19 +3,45 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useWishListStore } from "@/store/wishListStore"; // Import your store
-import { WishlistItem } from "@/types/product";
+import { useWishListStore } from "@/store/wishListStore"; 
+import { CartItem, WishlistItem } from "@/types/product";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { useCartStore } from "@/store/cartStore";
 
 const WishlistPage = () => {
-  const { items, removeFromWishList, moveAllToCart } = useWishListStore();
+  const { items, removeFromWishList } = useWishListStore();
+  const addToCart = useCartStore((state)=>state.addToCart)
 
   const handleRemoveItem = (itemId: string) => {
     removeFromWishList(itemId);
   };
 
-  const handleMoveAllToCart = () => {
-    moveAllToCart();
+  const moveToCart = (item:WishlistItem)=>{
+       const cartItem:CartItem = {
+         productId: item.id,
+  productName: item.name,
+  quantity: 1,
+  price: item.price,
+  description: item.description || "",
+      }
+    addToCart(cartItem)
+    removeFromWishList(item.id)
+  }
+ const handleMoveAllToCart = () => {
+    items.forEach((item) => {
+
+      const cartItem:CartItem = {
+         productId: item.id,
+  productName: item.name,
+  quantity: 1,
+  price: item.price,
+  description: item.description || "",
+      }
+      addToCart(cartItem); 
+    });
+
+    items.forEach((item)=>
+    removeFromWishList(item.id))
   };
 
   return (
@@ -55,7 +81,7 @@ const WishlistPage = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button variant="outline" className="rounded-xl">
+                <Button variant="outline" className="rounded-xl" onClick={()=>moveToCart(item)}>
                   Move to Cart
                 </Button>
                 <Button
