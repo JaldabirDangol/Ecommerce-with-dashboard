@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db"
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 
 const ProductFetcher = async(searchQuery?: string)=>{
- const page = 1;
+const page = 1;
 const limit = 30;
 
      const allProducts= await prisma.product.findMany({
