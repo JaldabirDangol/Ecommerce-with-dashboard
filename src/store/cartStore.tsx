@@ -21,7 +21,7 @@ export const useCartStore = create(
     persist( 
       (set) => ({
         items: [],
-        addToCart: (newItem) =>
+        addToCart: (newItem:CartItem) =>
           set((state) => {
             const exists = state.items.find(
               (i) => i.productId === newItem.productId

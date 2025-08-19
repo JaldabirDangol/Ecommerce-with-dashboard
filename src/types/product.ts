@@ -24,3 +24,12 @@ export interface ProductDetailSelectorType {
   description: string;
   price:number
 }
+
+export interface WishlistItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  description?: string;
+  dateAdded: Date; 
+}
