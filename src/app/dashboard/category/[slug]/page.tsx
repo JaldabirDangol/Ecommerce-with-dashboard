@@ -6,25 +6,21 @@ import Image from "next/image";
 import { FaExclamationTriangle, FaBoxOpen } from "react-icons/fa";
 import { MoreVerticalIcon, Edit, Trash2 } from "lucide-react";
 import { ProductCardSkeleton } from "@/components/productCardSkeleton";
+import Link from "next/link";
 
 interface Product {
   id: string;
   name: string;
   price: number;
   images?: [string];
+  isPublished?:boolean;
+  stock:number
 }
 
 const ProductCard = ({ product }: { product: Product }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleEdit = () => {
-    // Implement your edit logic here, e.g., redirect to an edit page
-    console.log(`Editing product: ${product.name}`);
-    setIsDropdownOpen(false);
-  };
-
   const handleDelete = () => {
-    // Implement your delete logic here, e.g., show a confirmation modal
     console.log(`Deleting product: ${product.name}`);
     setIsDropdownOpen(false);
   };
@@ -68,7 +64,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </p>
         </div>
 
-        {/* Action Dropdown Button */}
+     
         <div className="absolute top-4 right-4 z-10">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -79,13 +75,12 @@ const ProductCard = ({ product }: { product: Product }) => {
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
-                <button
-                  onClick={handleEdit}
+                <Link href={`/dashboard/products/edit?id=${product.id}`}
                   className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                 >
                   <Edit size={16} className="mr-2" />
                   Edit Product
-                </button>
+                </Link>
                 <button
                   onClick={handleDelete}
                   className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
