@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,7 +54,7 @@ const DashboardSettingsPage: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col p-4 md:p-8 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <Toaster />
+     
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Settings</h1>
