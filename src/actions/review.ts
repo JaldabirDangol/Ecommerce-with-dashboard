@@ -2,17 +2,15 @@
 
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth"; // Assuming you have an authentication solution
+import { auth } from "@/app/auth"; // Assuming you have an authentication solution
 
-export async function addReview({
-  productId,
-  rating,
-  description,
-}: {
+interface AddReviewProps {
   productId: string;
   rating: number;
   description: string;
-}) {
+}
+
+export async function addReview({ productId, rating, description }: AddReviewProps) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -21,10 +19,20 @@ export async function addReview({
 
   const userId = session.user.id;
 
-  // You would typically add a check here to see if the user has purchased the product
-  // For this example, we'll assume they have.
-
   try {
+    // Check if the user has already reviewed this product
+    const existingReview = await prisma.review.findFirst({
+      where: {
+        userId: userId,
+        productId: productId,
+      },
+    });
+
+    if (existingReview) {
+      throw new Error("You have already submitted a review for this product.");
+    }
+
+    // Create the new review
     await prisma.review.create({
       data: {
         userId,
@@ -34,10 +42,11 @@ export async function addReview({
       },
     });
 
+    // Revalidate the product page to show the new review immediately
     revalidatePath(`/product/${productId}`);
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Failed to add review:", error);
-    throw new Error("Failed to add review.");
+    throw new Error(error.message || "Failed to add review. Please try again.");
   }
 }

@@ -11,7 +11,7 @@ export const Cart = () => {
 
 
   return (
-    <Link href={"/cart"} className="rounded-full bg-white flex relative">
+    <Link href={"/cart"} className="rounded-full bg-white flex relative ">
       <CiShoppingCart className="w-8 h-8" />
       <span className="absolute -right-1 -top-2 text-red-500">
         {cartCount > 0 ? cartCount : 0}

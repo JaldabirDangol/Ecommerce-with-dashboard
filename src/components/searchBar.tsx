@@ -21,7 +21,7 @@ export const SearchBar = () => {
   };
 
   return (
-    <div className="relative flex items-center lg:w-xl">
+    <div className="relative flex items-center lg:w-md">
       <Input
         placeholder="Search products..."
         value={searchTerm}
