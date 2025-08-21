@@ -1,104 +1,121 @@
-"use client"
+"use client";
 
-import { deleteCartItem} from "@/actions/cart";
+import { deleteCartItem } from "@/actions/cart";
 import { useCartStore } from "@/store/cartStore";
 import { Heart, Trash } from "lucide-react";
 import Image from "next/image";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { MdOutlineCheckBox } from "react-icons/md";
 import { toast } from "sonner";
 import ProductDescription from "./productDescription";
 
-export const CartItem = ({item}:any)=>{
-  const [ticked , setTicked] = useState(false);
+export const CartItem = ({ item }: any) => {
+  const toggleSelected = useCartStore((state) => state.toggleSelected);
+  const isSelected = useCartStore(
+    (state) =>
+      state.items.find((i) => i.productId === item.product.id)
+        ?.isSelected
+  );
+
   const [isPending, startTransition] = useTransition();
-  const removeFromCart = useCartStore((state)=>state.removeFromCart)
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
 
+  const deleteCartItemHandler = async () => {
+    startTransition(async () => {
+      try {
+        const res = await deleteCartItem(item.id);
+        toast(res.message);
 
+        removeFromCart(item.product.id);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
 
-  const deleteCartItemHandler= async()=>{
-    startTransition(async()=>{
- try {
-      const res = await deleteCartItem(item.id)
-      toast(res.message)
+  return (
+    <div className="flex w-full items-center gap-4 bg-main-200 p-4  rounded-2xl">
+      {isSelected ? (
+        <MdOutlineCheckBox
+          onClick={() => toggleSelected(item.product.id)}
+          className="w-8 h-8 cursor-pointer"
+        />
+      ) : (
+        <MdOutlineCheckBoxOutlineBlank
+          onClick={() => toggleSelected(item.product.id)}
+          className="w-8 h-8 cursor-pointer"
+        />
+      )}
 
-       removeFromCart(item.product.id)
-      
-       } catch (error) {
-         console.log(error)
-       }
-    })
-      
-  }
+      <div className=" h-16 ">
+        <Image
+          src={item.product.images[0]}
+          height={100}
+          width={100}
+          alt={"product"}
+          className="object-contain"
+        />
+      </div>
 
-    return (
+      <div className="flex flex-col w-[70%]">
+        <h2 className="text-md font-semibold">{item.product.name}</h2>
+        <ProductDescription
+          description={item.product.description}
+          maxLength={150}
+        />
+      </div>
 
-        <div className="flex w-full items-center gap-4 bg-main-200 p-4  rounded-2xl">
-            {
-                ticked ?  <MdOutlineCheckBox onClick={()=>setTicked(!ticked)} className="w-8 h-8" /> :  <MdOutlineCheckBoxOutlineBlank onClick={()=>setTicked(!ticked)} className="w-8 h-8" />
-            }
-            
-          <div className=" h-16 ">
-              <Image src={item.product.images[0]} height={100} width={100} alt={"product"}
-              className="object-contain" />
-          </div>
-         
-         <div className="flex flex-col w-[70%]">
-            <h2 className="text-md font-semibold">{ item.product.name}</h2>
-            <ProductDescription description={item.product.description} maxLength={150}/>
-         </div>
-   
-   <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
+        <h2>{item.product.price}</h2>
 
-    <h2>{item.product.price}</h2>
-     
-  <div className="flex gap-2">
-  <button
-    className="p-2 rounded-full border hover:bg-red-100 transition"
-    title="Add to Wishlist"
-  >
-    <Heart className="w-5 h-5 text-red-500" />
-  </button>
+        <div className="flex gap-2">
+          <button
+            className="p-2 rounded-full border hover:bg-red-100 transition"
+            title="Add to Wishlist"
+          >
+            <Heart className="w-5 h-5 text-red-500" />
+          </button>
 
- <button
+          <button
             className="p-2 rounded-full border hover:bg-gray-200 transition"
             title="Delete Product"
             onClick={deleteCartItemHandler}
-            disabled={isPending} 
+            disabled={isPending}
           >
-            {isPending ? <div className="spinner"></div> : <Trash className="w-5 h-5 text-gray-600" />}
+            {isPending ? (
+              <div className="spinner"></div>
+            ) : (
+              <Trash className="w-5 h-5 text-gray-600" />
+            )}
           </button>
-</div>
-   </div>
-
- <div>
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">Quantity</h2>
-              <div className="flex items-center gap-3">
-                <button
-                  className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Decrease quantity"
-                
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={item.quantity} 
-                  min="1"
-                  className="w-16 text-center text-xl font-semibold border border-gray-300 rounded-lg py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  aria-label="Product quantity"
-               
-                />
-                <button
-                  className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
         </div>
-    )
-}
+      </div>
+
+      <div>
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">Quantity</h2>
+        <div className="flex items-center gap-3">
+          <button
+            className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Decrease quantity"
+          >
+            -
+          </button>
+          <input
+            type="number"
+            value={item.quantity}
+            min="1"
+            className="w-16 text-center text-xl font-semibold border border-gray-300 rounded-lg py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Product quantity"
+          />
+          <button
+            className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Increase quantity"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

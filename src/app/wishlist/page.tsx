@@ -74,7 +74,7 @@ const handleMoveAllToCart = async () => {
           items.map((item: WishlistItem) => (
             <div
               key={item.id}
-              className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm"
+              className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm gap-1"
             >
               <div className="flex items-center gap-4">
                 <Image

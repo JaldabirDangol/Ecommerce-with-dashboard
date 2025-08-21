@@ -16,6 +16,7 @@ export interface Product {
 }
 
 export interface CartItem {
+  isSelected?:boolean;
   productId: string;
   productName: string;
   quantity: number;

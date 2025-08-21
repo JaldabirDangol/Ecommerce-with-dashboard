@@ -4,15 +4,17 @@ import { CartItem } from "@/types/product";
 
 interface CartState {
   items: CartItem[];
+  isSelected:(id:string)=>boolean;
   addToCart: (item: CartItem) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
+  toggleSelected:(productId:string)=>void;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     devtools(
-      (set) => ({
+      (set,get) => ({
         items: [],
         addToCart: (newItem: CartItem) =>
           set((state) => {
@@ -37,6 +39,21 @@ export const useCartStore = create<CartState>()(
         clearCart: () => set(() => ({
           items: []
         })),
+
+toggleSelected: (productId: string) =>
+  set((state) => ({
+    items: state.items.map((item) =>
+      item.productId === productId
+        ? { ...item, isSelected: !item.isSelected }
+        : item
+    ),
+  })),
+
+    isSelected: (id: string) => {
+        return get().items.some((item) => item.productId === id);
+      },
+
+
       }),
       {
         name: "cart-storage",
