@@ -8,11 +8,14 @@ import { useState, useTransition } from "react";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { MdOutlineCheckBox } from "react-icons/md";
 import { toast } from "sonner";
+import ProductDescription from "./productDescription";
 
 export const CartItem = ({item}:any)=>{
   const [ticked , setTicked] = useState(false);
   const [isPending, startTransition] = useTransition();
   const removeFromCart = useCartStore((state)=>state.removeFromCart)
+
+
 
   const deleteCartItemHandler= async()=>{
     startTransition(async()=>{
@@ -42,8 +45,8 @@ export const CartItem = ({item}:any)=>{
           </div>
          
          <div className="flex flex-col w-[70%]">
-            <h2>{ item.product.name}</h2>
-            <p className="w-full line-clamp-3">{item.product.description}</p>
+            <h2 className="text-md font-semibold">{ item.product.name}</h2>
+            <ProductDescription description={item.product.description} maxLength={150}/>
          </div>
    
    <div className="flex flex-col gap-2">

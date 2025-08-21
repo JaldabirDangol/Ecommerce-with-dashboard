@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import WishlistButton from "@/components/wishListButton";
 import { WishlistItem } from "@/types/product";
+import ProductDescription from "@/components/productDescription";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const resolvedParams = await params;
@@ -41,9 +42,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             </h1>
 
             {product.description && (
-              <p className="text-gray-700 text-base leading-relaxed">
-                {product?.description}
-              </p>
+           <ProductDescription description={product?.description}/>
             )}
 
             <div className="flex items-baseline gap-2">

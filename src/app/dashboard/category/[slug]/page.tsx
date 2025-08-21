@@ -27,7 +27,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
   return (
     <div className="relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-      {/* Product Image */}
+
       {product.images && product.images.length > 0 && (
         <div className="relative w-full h-48 sm:h-56">
           <Image
@@ -37,7 +37,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             objectFit="cover"
             className="rounded-t-xl"
           />
-          {/* Published Status Badge */}
+
           <div
             className={`absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold ${
               product.isPublished
@@ -50,7 +50,6 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       )}
 
-      {/* Product Details and Actions */}
       <div className="p-5 flex flex-col justify-between h-auto">
         <div>
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight truncate mb-1">
@@ -147,7 +146,6 @@ export default function CategoryProductPage() {
           Viewing products in this category.
         </p>
 
-        {/* Loading State */}
         {loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             <ProductCardSkeleton />
