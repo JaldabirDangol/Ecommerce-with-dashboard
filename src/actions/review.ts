@@ -20,7 +20,6 @@ export async function addReview({ productId, rating, description }: AddReviewPro
   const userId = session.user.id;
 
   try {
-    // Check if the user has already reviewed this product
     const existingReview = await prisma.review.findFirst({
       where: {
         userId: userId,

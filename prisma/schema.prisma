@@ -60,12 +60,13 @@ model VerificationToken {
 
 model User {
   id             String    @id @default(cuid())
-  email          String?   @unique
+  email          String   @unique
   emailVerified  DateTime?
   image          String?
   password       String?  
   name           String? 
   username       String? @unique
+  phoneNumber    String?   @unique 
   role           Role @default(USER)
   cartItem       Cart?
   reviews        Review[]
@@ -194,12 +195,12 @@ model Address {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  fullName  String
-  street    String
-  city      String
-  postal    String
-  country   String
-  phone     String
+  fullName  String?
+  street    String?
+  city      String?
+  postal    String?
+  country   String?
+  phone     String?
 
   createdAt DateTime @default(now())
 }

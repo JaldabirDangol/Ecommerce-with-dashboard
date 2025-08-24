@@ -26,15 +26,13 @@ const limit = 30;
 }
 
 interface SearchParamsProps {
-  searchParams: {
-    search?: string;
-  };
+  searchParams: Promise<{ search?: string }>;
 }
 
 const ProductsPage = async( {searchParams}:SearchParamsProps ) => {
 
-  const searchQuery = searchParams?.search;
-  const products = await ProductFetcher(searchQuery);
+  const {search} = await searchParams;
+  const products = await ProductFetcher(search);
 
  if (!products || products.length === 0) {
     return (    <div className="w-full flex justify-center max-w-9xl  rounded-xl gap-2 shadow-sm mt-2">  
