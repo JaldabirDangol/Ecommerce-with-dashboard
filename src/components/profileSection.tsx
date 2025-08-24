@@ -1,18 +1,7 @@
 "use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { 
-  User, 
-  Settings, 
-  CreditCard, 
-  LogOut, 
-  ChevronDown,
-  Heart,
-  ShoppingBag,
-  Bell
-} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from '@/components/ui/button';
-import { useSession } from "next-auth/react"
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -21,9 +10,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  ChevronDown,
+  CreditCard,
+  LogOut,
+  Settings,
+  User
+} from 'lucide-react';
+import { useSession } from "next-auth/react";
 
-import { Badge } from '@/components/ui/badge';
 import { useEffect, useRef, useState } from "react";
+import ProfileSettings1 from "@/components/profileSettings1";
+import Link from "next/link";
 
 export default function ProfilSection() {
    const {data:session} = useSession();
@@ -82,10 +80,13 @@ export default function ProfilSection() {
                 </div>
               </div>
               <div className="flex gap-4 pt-3">
-                <Button variant="outline" size="sm" className="text-xs h-8 flex-1">
-                  <User className="h-3.5 w-3.5 mr-1.5" />
-                  Profile
-                </Button>
+               <Link
+  href="/profile"
+  className="text-xs h-8 flex-1 flex items-center justify-center shadow-sm rounded-sm"
+>
+  <User className="h-3.5 w-3.5 mr-1.5" />
+  Profile
+</Link>
                 <Button size="sm" className="text-xs h-8 flex-1">
                   Upgrade
                 </Button>
@@ -94,24 +95,8 @@ export default function ProfilSection() {
           </DropdownMenuLabel>
           
           <DropdownMenuSeparator />
-          
-          <DropdownMenuGroup>
-            <DropdownMenuItem className="cursor-pointer p-3 flex items-center">
-              <ShoppingBag className="mr-2 h-4 w-4" />
-              <span>Orders</span>
-              <Badge variant="outline" className="ml-auto">3</Badge>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer p-3 flex items-center">
-              <Heart className="mr-2 h-4 w-4" />
-              <span>Wishlist</span>
-              <Badge variant="outline" className="ml-auto">12</Badge>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer p-3 flex items-center">
-              <Bell className="mr-2 h-4 w-4" />
-              <span>Notifications</span>
-              <Badge variant="destructive" className="ml-auto">5</Badge>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
+          <ProfileSettings1/>
+     
           
           <DropdownMenuSeparator />
           
