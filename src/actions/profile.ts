@@ -46,7 +46,6 @@ export const updateUserData = async (
     const shippingAddressData = { street: data.shippingAddress };
 
     await prisma.$transaction(async (tx) => {
-      // Step 1: Update the User's name, email, and phone number
       if (Object.keys(userDataToUpdate).length > 0) {
         await tx.user.update({
           where: { id: userId },

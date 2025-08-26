@@ -23,6 +23,11 @@ interface ProfileFormData {
   phone: string;
   defaultAddress: string;
   shippingAddress: string;
+  shippingAddressPhone:number;
+  postal:number;
+  country:string;
+  street:string;
+  city:string;
 }
 
 const EditProfileForm = ({ session, setEditOpen }: EditProfileFormProps) => {
