@@ -3,22 +3,8 @@
 import { auth } from "@/app/auth";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import {ProfileFormData} from "@/types/profileFormData"
 
-interface ProfileFormData {
-  name?: string;
-  email?: string;
-  phone?: string;
-  defaultAddress?: string;
-  shippingAddress?: string;
-}
-
-interface ProfileFormData {
-  name?: string;
-  email?: string;
-  phone?: string;
-  defaultAddress?: string;
-  shippingAddress?: string;
-}
 
 export const updateUserData = async (
   prevState: { error?: string; success?: boolean; message?: string },
@@ -95,5 +81,37 @@ export const updateUserData = async (
   } catch (error: any) {
     console.error("Failed to update profile:", error);
     return { error: "Failed to update profile. Please try again." };
+  }
+};
+
+
+export const initialUserData = async () => {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return { error: "User is not authenticated", status: 401 };
+    }
+
+    const userData = await prisma.user.findUnique({
+      where: {
+        id: session.user.id
+      },
+      include: {
+       defaultAddress:true,
+       shippingAddress:true
+      }
+    });
+
+    if (!userData) {
+      return { error: "User not found in database", status: 404 };
+    }
+   
+    console.log("userData",userData)
+    return userData;
+
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return { error: "Failed to fetch user data", status: 500 };
   }
 };

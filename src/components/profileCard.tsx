@@ -5,15 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pencil } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
-import {
-  Dialog,
-} from "@/components/ui/dialog"
+import { useEffect, useState } from "react";
+import { Dialog } from "@/components/ui/dialog";
 import EditProfileForm from "@/components/editProfileForm";
+import { initialUserData } from "@/actions/profile";
 
 const ProfileCard = () => {
   const { data: session } = useSession();
-  const [editOpen ,setEditOpen] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
+   const [userData, setUserData] = useState(null);
+
+ useEffect(() => {
+
+    const fetchUserData = async () => {
+      if (session?.user?.id) {
+        const res = await initialUserData();
+        setUserData(res); 
+      console.log("Updated userdata:", userData);
+      }
+    };
+    fetchUserData();
+  }, [session]); 
+  const user = userData as any;
 
   return (
     <Card className="rounded-2xl shadow-md">
@@ -21,55 +34,57 @@ const ProfileCard = () => {
         <div className="flex items-center gap-4">
           <Avatar className="w-16 h-16">
             <AvatarImage
-              src={session?.user?.image ?? ""}
-              alt={session?.user?.name ?? "User"}
+              src={user?.image ?? ""}
+              alt={user?.name ?? "User"}
             />
             <AvatarFallback className="bg-blue-100 text-blue-600 text-lg">
-              {session?.user?.name?.charAt(0)}
+              {user?.name?.charAt(0)}
             </AvatarFallback>
           </Avatar>
 
           <div>
-            <CardTitle className="text-xl">{session?.user?.name}</CardTitle>
-            <p className="text-gray-500">Kathmandu, Nepal</p>
+            <CardTitle className="text-xl">{user?.name}</CardTitle>
+            <p className="text-gray-500">{user?.defaultAddress?.city || "Kathmandu"}, {user?.defaultAddress?.country || "Nepal"}</p>
           </div>
         </div>
 
-   <Dialog open={editOpen} onOpenChange={setEditOpen}>
-  <Button
-    variant="outline"
-    onClick={() => setEditOpen(!editOpen)}
-    className="flex items-center gap-2"
-  >
-    <Pencil size={16} /> Edit
-  </Button>
-  <EditProfileForm 
-  session={session} 
-  setEditOpen={setEditOpen} 
-/>
-
-</Dialog>
-
+        <Dialog open={editOpen} onOpenChange={setEditOpen}>
+          <Button
+            variant="outline"
+            onClick={() => setEditOpen(!editOpen)}
+            className="flex items-center gap-2"
+          >
+            <Pencil size={16} /> Edit
+          </Button>
+          <EditProfileForm 
+            user={user}
+            setEditOpen={setEditOpen}
+          />
+        </Dialog>
       </CardHeader>
 
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-gray-500">Full Name</p>
-            <p>{session?.user?.name || "Guest User"}</p>
+            <p>{user?.name || "Guest User"}</p>
           </div>
           <div>
             <p className="text-gray-500">Email</p>
-            <p>{session?.user?.email || "example@email.com"}</p>
+            <p>{user?.email || "example@email.com"}</p>
           </div>
           <div>
             <p className="text-gray-500">Phone</p>
-            <p>{(session?.user as any)?.phone || "+977 9800000000"}</p>
+            <p>{user?.defaultAddress?.phone || "+977 9800000000"}</p>
           </div>
           <div>
             <p className="text-gray-500">Default Address</p>
             <p>
-              {(session?.user as any)?.defaultAddress || "Kathmandu, Nepal"}
+              {user?.defaultAddress?.street || "No street provided"}
+              <br />
+              {user?.defaultAddress?.city || "No city provided"}, {user?.defaultAddress?.postal || "No postal code"}
+              <br />
+              {user?.defaultAddress?.country || "No country provided"}
             </p>
           </div>
         </div>
@@ -79,12 +94,14 @@ const ProfileCard = () => {
         <div>
           <h3 className="font-semibold mb-2">Shipping Address</h3>
           <p>
-            {(session?.user as any)?.shippingAddress ||
-              "Kathmandu, Nepal, 44600"}
+            {user?.shippingAddress?.street || "No street provided"}
+            <br />
+            {user?.shippingAddress?.city || "No city provided"}, {user?.shippingAddress?.postal || "No postal code"}
+            <br />
+            {user?.shippingAddress?.country || "No country provided"}
           </p>
         </div>
       </CardContent>
-
     </Card>
   );
 };

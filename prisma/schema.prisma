@@ -90,7 +90,6 @@ model Address {
   id        String    @id @default(cuid())
   userId    String
   user      User      @relation(fields: [userId], references: [id])
-  fullName  String?
   street    String?
   city      String?
   postal    String?
