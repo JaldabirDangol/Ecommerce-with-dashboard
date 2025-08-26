@@ -16,13 +16,14 @@ const ProductCard = ({imageUrl,name,rating,price,description,id}:ProductCardProp
    <Link href={`/product/${id}`} passHref>
      <div className='flex flex-col w-[320px] bg-main-300 my-2 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer'> 
        <div className="w-full flex justify-center items-center bg-white h-[250px] overflow-hidden rounded-t-2xl">
-         <Image
-           src={imageUrl ?? ""}
-           alt={name}
-           width={300}
-           height={300}
-           className="object-contain max-h-[98%] max-w-[95%]"
-         />
+        <Image
+  width={64}
+  height={64}
+  src={`https://picsum.photos/64/64?random=${Math.random()}`}
+  alt={name}
+  className="object-contain max-h-[90%] max-w-[90%]"
+  unoptimized
+/>
        </div>
        <div className='p-4 h-[190px]'>
          <h2 className='text-xl font-semibold text-gray-800 mb-1'>{name}</h2>

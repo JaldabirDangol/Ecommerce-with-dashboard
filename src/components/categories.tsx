@@ -41,9 +41,10 @@ export default async function Categories() {
             <Image
               width={64}
               height={64}
-              src={item.image}
+ src={`https://picsum.photos/seed/${item.id}/64/64`}
               alt={item.name}
               className="object-contain max-h-[90%] max-w-[90%]"
+              unoptimized
             />
           </div>
           <span className="mt-2 text-sm text-center">{item.name}</span>

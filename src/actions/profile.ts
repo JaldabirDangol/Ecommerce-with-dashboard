@@ -1,18 +1,34 @@
-"use server"
+"use server";
 
-import { auth } from "@/app/auth"
+import { auth } from "@/app/auth";
 import { prisma } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
+interface ProfileFormData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  defaultAddress?: string;
+  shippingAddress?: string;
+}
+
+interface ProfileFormData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  defaultAddress?: string;
+  shippingAddress?: string;
+}
 
 export const updateUserData = async (
   prevState: { error?: string; success?: boolean; message?: string },
-  formData: FormData
+  data: ProfileFormData
 ): Promise<{ error?: string; success?: boolean; message?: string }> => {
   try {
     const session = await auth();
-     const userId = session?.user?.id;
+    const userId = session?.user?.id;
 
-    if (!session?.user?.id || !session?.user?.email) {
+    if (!userId || !session?.user?.email) {
       return { error: "You are not logged in." };
     }
 
@@ -21,60 +37,64 @@ export const updateUserData = async (
       email?: string;
       phoneNumber?: string;
     } = {};
-    if (formData.get("name")) userDataToUpdate.name = formData.get("name") as string;
-    if (formData.get("email")) userDataToUpdate.email = formData.get("email") as string;
-    if (formData.get("phone")) userDataToUpdate.phoneNumber = formData.get("phone") as string;
 
-    const addressDataToUpdate: {
-      fullName?: string;
-      city?: string;
-      country?: string;
-      postal?: string;
-      phone?: string;
-      street?: string;
-    } = {};
-    if (formData.get("fullName")) addressDataToUpdate.fullName = formData.get("fullName") as string;
-    if (formData.get("city")) addressDataToUpdate.city = formData.get("city") as string;
-    if (formData.get("country")) addressDataToUpdate.country = formData.get("country") as string;
-    if (formData.get("postal")) addressDataToUpdate.postal = formData.get("postal") as string;
-    if (formData.get("phone")) addressDataToUpdate.phone = formData.get("phone") as string;
-    if (formData.get("street")) addressDataToUpdate.street = formData.get("street") as string;
+    if (data.name) userDataToUpdate.name = data.name;
+    if (data.email) userDataToUpdate.email = data.email;
+    if (data.phone) userDataToUpdate.phoneNumber = data.phone;
+    
+    const defaultAddressData = { street: data.defaultAddress };
+    const shippingAddressData = { street: data.shippingAddress };
 
-    await prisma.$transaction(async (prisma) => {
+    await prisma.$transaction(async (tx) => {
+      // Step 1: Update the User's name, email, and phone number
       if (Object.keys(userDataToUpdate).length > 0) {
-        await prisma.user.update({
-          where: {
-            email: session?.user?.email as string,
-          },
+        await tx.user.update({
+          where: { id: userId },
           data: userDataToUpdate,
         });
       }
 
-      const existingAddress = await prisma.address.findFirst({
-        where: { userId: session?.user?.id },
-      });
-
-      if (Object.keys(addressDataToUpdate).length > 0) {
-        await prisma.address.upsert({
-          where: {
-            id: existingAddress?.id ,
+      if (defaultAddressData.street) {
+        const defaultAddressRecord = await tx.address.upsert({
+          where: { 
+            userId: userId, 
           },
-          update: addressDataToUpdate,
+          update: defaultAddressData,
           create: {
-            userId: userId!,
-            fullName: addressDataToUpdate.fullName || "",
-            street: addressDataToUpdate.street || "",
-            city: addressDataToUpdate.city || "",
-            postal: addressDataToUpdate.postal || "",
-            country: addressDataToUpdate.country || "",
-            phone: addressDataToUpdate.phone || "",
+            userId: userId,
+            ...defaultAddressData,
           },
+        });
+        
+        await tx.user.update({
+          where: { id: userId },
+          data: { defaultAddressId: defaultAddressRecord.id },
+        });
+      }
+
+      if (shippingAddressData.street) {
+        const shippingAddressRecord = await tx.address.upsert({
+          where: { 
+            userId: userId, 
+          },
+          update: shippingAddressData,
+          create: {
+            userId: userId,
+            ...shippingAddressData,
+          },
+        });
+        
+        await tx.user.update({
+          where: { id: userId },
+          data: { shippingAddressId: shippingAddressRecord.id },
         });
       }
     });
 
+    revalidatePath("/profile");
     return { success: true, message: "Profile updated successfully." };
   } catch (error: any) {
+    console.error("Failed to update profile:", error);
     return { error: "Failed to update profile. Please try again." };
   }
 };

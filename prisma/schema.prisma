@@ -59,28 +59,49 @@ model VerificationToken {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  email          String   @unique
-  emailVerified  DateTime?
-  image          String?
-  password       String?  
-  name           String? 
-  username       String? @unique
-  phoneNumber    String?   @unique 
-  role           Role @default(USER)
-  cartItem       Cart?
-  reviews        Review[]
-  orders         Order[]
-  address        Address[]
-  wishlist       Wishlist[]
-  sessions       Session[]
-  account        Account[]
+  id              String    @id @default(cuid())
+  email           String    @unique
+  emailVerified   DateTime?
+  image           String?
+  password        String?
+  name            String?
+  username        String?   @unique
+  phoneNumber     String?   @unique
+  role            Role      @default(USER)
+  cartItem        Cart?
+  reviews         Review[]
+  orders          Order[]
+  address         Address[]
+  wishlist        Wishlist[]
+  sessions        Session[]
+  account         Account[]
 
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  defaultAddressId String?  @unique
+  shippingAddressId String? @unique
 
+  defaultAddress Address?  @relation("DefaultAddress", fields: [defaultAddressId], references: [id])
+  shippingAddress Address? @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
+model Address {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  fullName  String?
+  street    String?
+  city      String?
+  postal    String?
+  country   String?
+  phone     String?
+  
+  defaultAddressOf User? @relation("DefaultAddress")
+  shippingAddressOf User? @relation("ShippingAddress")
+
+  createdAt DateTime  @default(now())
+}
 
 model ProductCategory{
   id           String  @id @default(cuid())
@@ -189,20 +210,6 @@ model Payment {
 
   order     Order     @relation(fields: [orderId], references: [id])
   createdAt DateTime  @default(now())
-}
-
-model Address {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  fullName  String?
-  street    String?
-  city      String?
-  postal    String?
-  country   String?
-  phone     String?
-
-  createdAt DateTime @default(now())
 }
 
 model Wishlist {

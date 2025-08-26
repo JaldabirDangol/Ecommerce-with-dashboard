@@ -6,10 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "npx ts-node --compiler-options '{\"module\":\"commonjs\"}' prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
+    "@faker-js/faker": "^9.9.0",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.2.0",
     "@prisma/client": "^6.11.1",
@@ -56,5 +58,8 @@
     "tsx": "^4.20.3",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "npm run seed"
   }
 }

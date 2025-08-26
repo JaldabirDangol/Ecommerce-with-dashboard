@@ -8,30 +8,12 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog"
+import EditProfileForm from "@/components/editProfileForm";
 
 const ProfileCard = () => {
   const { data: session } = useSession();
   const [editOpen ,setEditOpen] = useState<boolean>(false);
-
-  const profileFields = [
-  { key: "name", label: "Full Name", type: "text", defaultValue: session?.user?.name || "Guest User" },
-  { key: "email", label: "Email", type: "email", defaultValue: session?.user?.email || "example@email.com" },
-  { key: "phone", label: "Phone", type: "text", defaultValue: (session?.user as any)?.phone || "+977 9800000000" },
-  { key: "defaultAddress", label: "Default Address", type: "text", defaultValue: (session?.user as any)?.defaultAddress || "Kathmandu, Nepal" },
-]
-
- const [formData, setFormData] = useState({
-  name: session?.user?.name || "",
-  email: session?.user?.email || "",
-  phone: (session?.user as any)?.phone || "",
-  defaultAddress: (session?.user as any)?.defaultAddress || "",
-  shippingAddress: (session?.user as any)?.shippingAddress || "",
-});
 
   return (
     <Card className="rounded-2xl shadow-md">
@@ -48,7 +30,7 @@ const ProfileCard = () => {
           </Avatar>
 
           <div>
-            <CardTitle className="text-xl">Jaldabir Dangol</CardTitle>
+            <CardTitle className="text-xl">{session?.user?.name}</CardTitle>
             <p className="text-gray-500">Kathmandu, Nepal</p>
           </div>
         </div>
@@ -61,51 +43,15 @@ const ProfileCard = () => {
   >
     <Pencil size={16} /> Edit
   </Button>
+  <EditProfileForm 
+  session={session} 
+  setEditOpen={setEditOpen} 
+/>
 
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Edit Profile</DialogTitle>
-      <DialogDescription>
-        Update your profile information below.
-      </DialogDescription>
-    </DialogHeader>
-
-  <div className="grid grid-cols-2 gap-4 text-sm mt-4">
-  {profileFields.map((field) => (
-    <div key={field.key}>
-      <label className="text-gray-500">{field.label}</label>
-      <input
-        type={field.type}
-        defaultValue={field.defaultValue}
-        className="w-full border rounded px-2 py-1 mt-1"
-        onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
-      />
-    </div>
-  ))}
-</div>
-
-    <hr className="my-4 border-t border-gray-200" />
-
-    <div>
-      <label className="font-semibold mb-2 block">Shipping Address</label>
-      <input
-        type="text"
-        defaultValue={(session?.user as any)?.shippingAddress || "Kathmandu, Nepal, 44600"}
-        className="w-full border rounded px-2 py-1 mt-1"
-      />
-    </div>
-
-    <div className="mt-4 flex justify-end gap-2">
-      <Button variant="outline" onClick={() => setEditOpen(false)}>
-        Cancel
-      </Button>
-      <Button type="submit">Save</Button>
-    </div>
-  </DialogContent>
 </Dialog>
 
-
       </CardHeader>
+
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
@@ -138,6 +84,7 @@ const ProfileCard = () => {
           </p>
         </div>
       </CardContent>
+
     </Card>
   );
 };
