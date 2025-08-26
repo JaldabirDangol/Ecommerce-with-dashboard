@@ -1,18 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Pencil, Package, Heart, CreditCard, Bell, Lock, Trash } from "lucide-react";
 import ProfileCard from "@/components/profileCard";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bell, CreditCard, Heart, Lock, Package, Trash } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type TabType = "profile" | "orders" | "wishlist" | "billing" | "notifications"  | "Delete Account";
 
 const tabs = ["profile" , "orders" , "wishlist" ,"billing" , "notifications" ,"Delete Account"]
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState<TabType>("profile");
+  const searchParams = useSearchParams();
+  const tabFromUrl = (searchParams.get("tab") as TabType) || "profile";
+   const [activeTab, setActiveTab] = useState<TabType>(tabFromUrl);
+   const router = useRouter()
+
+ useEffect(() => {
+    setActiveTab(tabFromUrl);
+  }, [tabFromUrl]);
 
   return (
     <div className="flex max-w-7xl mx-auto py-10 px-4 gap-8">
@@ -25,7 +33,7 @@ export default function ProfilePage() {
           className={`w-full justify-start ${
             item === "Delete Account" ? "text-red-600" : ""
           }`}
-          onClick={() => setActiveTab(item)}
+      onClick={() => router.push(`/profile?tab=${item}`)}
         >
           {item}
         </Button>
