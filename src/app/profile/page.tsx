@@ -3,10 +3,11 @@
 import ProfileCard from "@/components/profileCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bell, CreditCard, Heart, Lock, Package, Trash } from "lucide-react";
+import { Bell, CreditCard, Lock, Package, Trash } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { WishListTab } from "@/components/wishListTab";
 
 type TabType = "profile" | "orders" | "wishlist" | "billing" | "notifications"  | "Delete Account";
 
@@ -71,26 +72,7 @@ export default function ProfilePage() {
         )}
 
         {activeTab === "wishlist" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Heart size={18} /> Wishlist
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                <li className="flex justify-between">
-                  Apple iPhone 16 Pro Max <Button size="sm">View</Button>
-                </li>
-                
-            <hr className="my-4 border-t w-full border-gray-200" />
-
-                <li className="flex justify-between">
-                  Sony WH-1000XM5 Headphones <Button size="sm">View</Button>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+    <WishListTab/>
         )}
 
         {activeTab === "billing" && (

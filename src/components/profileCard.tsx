@@ -9,11 +9,13 @@ import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import EditProfileForm from "@/components/editProfileForm";
 import { initialUserData } from "@/actions/profile";
+import { useUserStore } from "@/store/userData";
 
 const ProfileCard = () => {
   const { data: session } = useSession();
   const [editOpen, setEditOpen] = useState<boolean>(false);
    const [userData, setUserData] = useState(null);
+   const updateUserDataStore = useUserStore((state)=>state.updateUserDataStore)
 
  useEffect(() => {
 
@@ -21,11 +23,13 @@ const ProfileCard = () => {
       if (session?.user?.id) {
         const res = await initialUserData();
         setUserData(res); 
-      console.log("Updated userdata:", userData);
+      console.log("Updated userdata:", res);
+      updateUserDataStore(res)
       }
     };
     fetchUserData();
   }, [session]); 
+
   const user = userData as any;
 
   return (
@@ -57,7 +61,6 @@ const ProfileCard = () => {
             <Pencil size={16} /> Edit
           </Button>
           <EditProfileForm 
-            user={user}
             setEditOpen={setEditOpen}
           />
         </Dialog>

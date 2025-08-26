@@ -12,33 +12,49 @@ import { updateUserData } from "@/actions/profile";
 import { toast } from "sonner";
 import { ProfileFormData } from "@/types/profileFormData";
 import { AtSign, Home, User, Package } from "lucide-react";
+import { useUserStore } from "@/store/userData";
 
 interface EditProfileFormProps {
-  user: ProfileFormData | null;
   setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
- 
 }
 
-const EditProfileForm = ({ user, setEditOpen  }: EditProfileFormProps) => {
-  const [formData, setFormData] = useState<ProfileFormData>({
-    name: user?.name || "",
-    email: user?.email || "",
-    phone: user?.phone || "",
-    defaultAddress: {
-      street: user?.defaultAddress?.street || "",
-      city: user?.defaultAddress?.city || "",
-      postal: user?.defaultAddress?.postal || "",
-      country: user?.defaultAddress?.country || "",
-      phone: user?.defaultAddress?.phone || "",
-    },
-    shippingAddress: {
-      street: user?.shippingAddress?.street || "",
-      city: user?.shippingAddress?.city || "",
-      postal: user?.shippingAddress?.postal || "",
-      country: user?.shippingAddress?.country || "",
-      phone: user?.shippingAddress?.phone || "",
-    },
-  });
+interface AddressFieldsProps {
+  addressType: "defaultAddress" | "shippingAddress";
+  formData: ProfileFormData;
+  handleAddressChange: (addressType: "defaultAddress" | "shippingAddress", field: string, value: string) => void;
+}
+
+
+const EditProfileForm = ({ setEditOpen }: EditProfileFormProps) => {
+  const user = useUserStore((state) => state.user);
+  const updateUserDataStore = useUserStore((state) => state.updateUserDataStore);
+
+const [formData, setFormData] = useState<ProfileFormData>({
+  email: user?.email || "",
+  name: user?.name || "",
+  username: user?.username || null,
+  phoneNumber: user?.phoneNumber || null,
+  defaultAddress: user?.defaultAddress
+    ? {
+        street: user.defaultAddress.street || "",
+        city: user.defaultAddress.city || "",
+        postal: user.defaultAddress.postal || "",
+        country: user.defaultAddress.country || "",
+        phone: user.defaultAddress.phone || "",
+      }
+    : null,
+  shippingAddress: user?.shippingAddress
+    ? {
+        street: user.shippingAddress.street || "",
+        city: user.shippingAddress.city || "",
+        postal: user.shippingAddress.postal || "",
+        country: user.shippingAddress.country || "",
+        phone: user.shippingAddress.phone || "",
+      }
+    : null,
+});
+
+  console.log("formdata on edit ",user)
 
   const initialData = { error: undefined, success: undefined, message: "" };
 
@@ -56,17 +72,18 @@ const EditProfileForm = ({ user, setEditOpen  }: EditProfileFormProps) => {
     }));
   };
 
-  const handleSave = async () => {
-    const result = await updateUserData(initialData, formData);
-    if (result.success) {
-      setEditOpen(false);
-      toast(result?.message);
-    }
-  };
+const handleSave = async () => {
+  const result = await updateUserData(initialData, formData);
+  if (result.success && result.userData) {
+    setEditOpen(false);
+    updateUserDataStore(result.userData);
+    toast(result.message);
+  }
+};
 
   return (
-    <DialogContent className={`!max-w-5xl bg-white dark:bg-gray-800 transition-colors duration-200`}>
-      <DialogHeader className="mb-6">
+    <DialogContent className={`!max-w-5xl p-2 h-full bg-white dark:bg-gray-800 transition-colors duration-200`}>
+      <DialogHeader>
         <DialogTitle className="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
           <User className="text-blue-600" size={28} />
           Edit Profile
@@ -77,7 +94,7 @@ const EditProfileForm = ({ user, setEditOpen  }: EditProfileFormProps) => {
         </DialogDescription>
       </DialogHeader>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 ">
         <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl border border-gray-200 dark:border-gray-600 w-full">
           <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100 flex items-center gap-2 mb-4">
             <User size={20} className="text-blue-600" />
@@ -127,6 +144,22 @@ const EditProfileForm = ({ user, setEditOpen  }: EditProfileFormProps) => {
               </div>
             </div>
           </div>
+          <div className="mt-8 flex justify-end gap-3 border-t pt-6">
+        <Button
+          variant="outline"
+          onClick={() => setEditOpen(false)}
+          className="px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          onClick={handleSave}
+          className="px-6 py-2 rounded-full font-semibold bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
+        >
+          Save
+        </Button>
+      </div>
         </div>
 
   
@@ -144,7 +177,6 @@ const EditProfileForm = ({ user, setEditOpen  }: EditProfileFormProps) => {
             />
           </div>
 
-          {/* Shipping Address */}
           <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl border border-gray-200 dark:border-gray-600">
             <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100 flex items-center gap-2 mb-4">
               <Package size={20} className="text-purple-600" />
@@ -159,105 +191,41 @@ const EditProfileForm = ({ user, setEditOpen  }: EditProfileFormProps) => {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-end gap-3 border-t pt-6">
-        <Button
-          variant="outline"
-          onClick={() => setEditOpen(false)}
-          className="px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-        >
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          onClick={handleSave}
-          className="px-6 py-2 rounded-full font-semibold bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
-        >
-          Save
-        </Button>
-      </div>
+      
     </DialogContent>
   );
 };
 
 export default EditProfileForm;
 
-// Reusable component for address fields to avoid repetition
-const AddressFields = ({ addressType, formData, handleAddressChange }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div>
-      <label
-        className="text-gray-600 dark:text-gray-300 text-sm font-medium block mb-1"
-        htmlFor={`${addressType}-phone`}
-      >
-        Phone
-      </label>
-      <input
-        id={`${addressType}-phone`}
-        type="text"
-        value={formData[addressType]?.phone || ""}
-        className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-        onChange={(e) => handleAddressChange(addressType, "phone", e.target.value)}
-      />
+const AddressFields = ({ addressType, formData, handleAddressChange }: AddressFieldsProps) => {
+  const fields = [
+    { name: "phone", label: "Phone" },
+    { name: "street", label: "Street" },
+    { name: "city", label: "City" },
+    { name: "postal", label: "Postal Code" },
+    { name: "country", label: "Country" },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {fields.map((field) => (
+        <div key={field.name} className={field.name === "country" ? "sm:col-span-2" : ""}>
+          <label
+            className="text-gray-600 dark:text-gray-300 text-sm font-medium block mb-1"
+            htmlFor={`${addressType}-${field.name}`}
+          >
+            {field.label}
+          </label>
+          <input
+            id={`${addressType}-${field.name}`}
+            type="text"
+            value={formData[addressType]?.[field.name as keyof typeof formData.defaultAddress] || ""}
+            className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+            onChange={(e) => handleAddressChange(addressType, field.name, e.target.value)}
+          />
+        </div>
+      ))}
     </div>
-    <div>
-      <label
-        className="text-gray-600 dark:text-gray-300 text-sm font-medium block mb-1"
-        htmlFor={`${addressType}-street`}
-      >
-        Street
-      </label>
-      <input
-        id={`${addressType}-street`}
-        type="text"
-        value={formData[addressType]?.street || ""}
-        className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-        onChange={(e) => handleAddressChange(addressType, "street", e.target.value)}
-      />
-    </div>
-    <div>
-      <label
-        className="text-gray-600 dark:text-gray-300 text-sm font-medium block mb-1"
-        htmlFor={`${addressType}-city`}
-      >
-        City
-      </label>
-      <input
-        id={`${addressType}-city`}
-        type="text"
-        value={formData[addressType]?.city || ""}
-        className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-        onChange={(e) => handleAddressChange(addressType, "city", e.target.value)}
-      />
-    </div>
-    <div>
-      <label
-        className="text-gray-600 dark:text-gray-300 text-sm font-medium block mb-1"
-        htmlFor={`${addressType}-postal`}
-      >
-        Postal Code
-      </label>
-      <input
-        id={`${addressType}-postal`}
-        type="text"
-        value={formData[addressType]?.postal || ""}
-        className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-        onChange={(e) => handleAddressChange(addressType, "postal", e.target.value)}
-      />
-    </div>
-    <div className="sm:col-span-2">
-      <label
-        className="text-gray-600 dark:text-gray-300 text-sm font-medium block mb-1"
-        htmlFor={`${addressType}-country`}
-      >
-        Country
-      </label>
-      <input
-        id={`${addressType}-country`}
-        type="text"
-        value={formData[addressType]?.country || ""}
-        className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-        onChange={(e) => handleAddressChange(addressType, "country", e.target.value)}
-      />
-    </div>
-  </div>
-);
+  );
+};
