@@ -4,6 +4,7 @@ import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { prisma } from "@/lib/db";
 import { auth } from "@/app/auth";
 import OrderSummary from "@/components/orderSummary";
+import { CartInitializer } from "@/components/cartInitializer";
 
 const cartFetcher = async () => {
   const session = await auth();
@@ -15,16 +16,18 @@ const cartFetcher = async () => {
     where: { userId: userId },
     include: { items: { include: { product: true } } },
   });
-   
+  
   return userCart?.items || [];
 };
 
 const cartPage = async () => {
   const cartItems = await cartFetcher();
-  console.log("cartpage",cartItems )
+  console.log("cartpage", cartItems);
 
   return (
     <div className="w-full h-full pt-2 flex justify-center gap-2">
+      <CartInitializer initialItems={cartItems} />
+
       <div className="w-[65%] flex flex-col gap-4">
         <div className="bg-white flex justify-between w-full mt-2 p-4 rounded-2xl items-center">
           <div className="flex gap-4 items-center">
@@ -38,14 +41,14 @@ const cartPage = async () => {
         </div>
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <CartItem key={item.product.id} item={item} />
+            <CartItem key={item.id} productId={item.product.id} />
           ))
         ) : (
           <div className="text-center text-gray-500 text-lg mt-10">Your cart is empty.</div>
         )}
       </div>
       
-     <OrderSummary/>
+      <OrderSummary />
     </div>
   );
 };

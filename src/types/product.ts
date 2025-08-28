@@ -21,8 +21,9 @@ export interface CartItem {
   productName: string;
   quantity: number;
   price: number;
-  description: string;
+  description?: string | null;
   color?: string;
+  image?:string;
 }
 export interface ProductDetailSelectorType {
   id: string;
