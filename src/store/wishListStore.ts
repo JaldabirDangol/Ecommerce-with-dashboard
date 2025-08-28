@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { WishlistItem } from '@/types/product';
+import { WishlistItem, WishlistItemBackend } from '@/types/product';
 
 interface WishlistState {
   items: WishlistItem[];
@@ -11,17 +11,16 @@ interface WishlistState {
 
 export const useWishListStore = create(
   persist<WishlistState>(
-    (set, get) => ({
+    (set) => ({
       items: [],
+
       addToWishList: (newItem) =>
         set((state) => {
           const exists = state.items.some((i) => i.id === newItem.id);
-          if (exists) {
-            return state;
-          }
+          if (exists) return state;
           return { items: [...state.items, newItem] };
         }),
-      
+
       removeFromWishList: (id) =>
         set((state) => ({
           items: state.items.filter((i) => i.id !== id),
@@ -30,17 +29,25 @@ export const useWishListStore = create(
       fetchAndSetWishlist: async () => {
         try {
           const response = await fetch('/api/wishlist');
-          if (!response.ok) {
-            throw new Error('Failed to fetch wishlist');
-          }
-          const items = await response.json();
-          set({ items });
+          if (!response.ok) throw new Error('Failed to fetch wishlist');
+
+          const backendItems: WishlistItemBackend[] = await response.json();
+
+          const mappedItems: WishlistItem[] = backendItems.map((item) => ({
+            id: item.productId,
+            name: item.product.name,
+            price: item.product.price,
+            image: item.product.image,
+            description: item.product.description,
+            dateAdded: item.product.dateAdded,
+          }));
+
+          set({ items: mappedItems });
         } catch (error) {
-          console.error("Error fetching wishlist:", error);
+          console.error('Error fetching wishlist:', error);
         }
       },
     }),
-
     {
       name: 'wishlist-storage',
       storage: createJSONStorage(() => localStorage),

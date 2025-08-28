@@ -16,22 +16,21 @@ export const useCartStore = create<CartState>()(
     devtools(
       (set,get) => ({
         items: [],
-        addToCart: (newItem: CartItem) =>
-          set((state) => {
-            const exists = state.items.find(
-              (i) => i.productId === newItem.productId
-            );
-            if (exists) {
-              return {
-                items: state.items.map((i) =>
-                  i.productId === newItem.productId
-                    ? { ...i, quantity: i.quantity + newItem.quantity }
-                    : i
-                ),
-              };
-            }
-            return { items: [...state.items, newItem] };
-          }),
+       addToCart: (newItem: CartItem) =>
+  set((state) => {
+    const exists = state.items.find((i) => i.productId === newItem.productId);
+    if (exists) {
+      return {
+        items: state.items.map((i) =>
+          i.productId === newItem.productId
+            ? { ...i, quantity: i.quantity + newItem.quantity }
+            : i
+        ),
+      };
+    }
+    return { items: [...state.items, { ...newItem, isSelected: true }] }; 
+  }),
+
         removeFromCart: (productId) =>
           set((state) => ({
             items: state.items.filter((item) => item.productId !== productId),

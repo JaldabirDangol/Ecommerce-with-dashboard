@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useWishListStore } from "@/store/wishListStore"; 
@@ -11,38 +11,18 @@ import { updateCartItem } from "@/actions/cart";
 import { toast } from "sonner";
 
 const WishlistPage = () => {
-  const { items, removeFromWishList } = useWishListStore();
-  const addToCart = useCartStore((state)=>state.addToCart)
+  const { items, removeFromWishList, fetchAndSetWishlist } = useWishListStore();
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  useEffect(() => {
+    fetchAndSetWishlist(); // fetch wishlist on page load
+  }, [fetchAndSetWishlist]);
 
   const handleRemoveItem = (itemId: string) => {
     removeFromWishList(itemId);
   };
 
- const moveToCart = async (item: WishlistItem) => {
-  const cartItem: CartItem = {
-    productId: item.id,
-    productName: item.name,
-    quantity: 1,
-    price: item.price,
-    description: item.description || "",
-  };
-
-  const result = await updateCartItem({
-    productId: item.id,
-    quantity: 1,
-  });
-
-  
-  if (result.success) {
-    toast(result.message); 
-    addToCart(cartItem);
-    removeFromWishList(item.id);
-  }
-};
-
-const handleMoveAllToCart = async () => {
-  for (const item of items) {
-
+  const moveToCart = async (item: WishlistItem) => {
     const cartItem: CartItem = {
       productId: item.id,
       productName: item.name,
@@ -57,12 +37,34 @@ const handleMoveAllToCart = async () => {
     });
 
     if (result.success) {
+      toast(result.message); 
       addToCart(cartItem);
+      removeFromWishList(item.id);
     }
-  }
+  };
 
-  items.forEach((item) => removeFromWishList(item.id));
-};
+  const handleMoveAllToCart = async () => {
+    for (const item of items) {
+      const cartItem: CartItem = {
+        productId: item.id,
+        productName: item.name,
+        quantity: 1,
+        price: item.price,
+        description: item.description || "",
+      };
+
+      const result = await updateCartItem({
+        productId: item.id,
+        quantity: 1,
+      });
+
+      if (result.success) {
+        addToCart(cartItem);
+      }
+    }
+
+    items.forEach((item) => removeFromWishList(item.id));
+  };
 
   return (
     <div className="flex w-full h-full p-6 gap-6">
@@ -100,7 +102,7 @@ const handleMoveAllToCart = async () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button variant="outline" className="rounded-xl" onClick={()=>moveToCart(item)}>
+                <Button variant="outline" className="rounded-xl" onClick={() => moveToCart(item)}>
                   Move to Cart
                 </Button>
                 <Button
@@ -119,16 +121,14 @@ const handleMoveAllToCart = async () => {
       <div className="w-[300px] h-fit bg-white rounded-2xl shadow-md p-4">
         <h2 className="text-xl font-semibold mb-4">Summary</h2>
         <p className="text-gray-600">
-          Total items:{" "}
-          <span className="font-semibold">{items.length}</span>
+          Total items: <span className="font-semibold">{items.length}</span>
         </p>
         <p className="text-gray-600">
-          Estimated total:{" "}
-          <span className="font-semibold text-red-500">
+          Estimated total: <span className="font-semibold text-red-500">
             ${items.reduce((acc, item) => acc + item.price, 0)}
           </span>
         </p>
-        <Button 
+        <Button
           className="w-full mt-4 rounded-xl"
           onClick={handleMoveAllToCart}
           disabled={items.length === 0}

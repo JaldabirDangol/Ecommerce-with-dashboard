@@ -42,3 +42,16 @@ export interface WishlistItem {
   description?: string;
   dateAdded: Date; 
 }
+
+export interface WishlistItemBackend {
+  id: string;
+  wishlistId: string;
+  productId: string;
+  product: {
+    name: string;
+    price: number;
+    image: string;
+    description?: string;
+    dateAdded: Date;
+  }
+}

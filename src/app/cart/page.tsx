@@ -15,7 +15,7 @@ const cartFetcher = async () => {
     where: { userId: userId },
     include: { items: { include: { product: true } } },
   });
-
+   
   return userCart?.items || [];
 };
 

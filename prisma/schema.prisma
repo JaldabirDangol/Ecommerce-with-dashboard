@@ -72,7 +72,7 @@ model User {
   reviews         Review[]
   orders          Order[]
   address         Address[]
-  wishlist        Wishlist[]
+  wishlist        Wishlist?
   sessions        Session[]
   account         Account[]
 

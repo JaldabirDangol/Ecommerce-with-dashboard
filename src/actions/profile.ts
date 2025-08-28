@@ -89,12 +89,11 @@ if (data.shippingAddress) {
     
     console.log(updatedUser, "updated user in backend");
     revalidatePath("/profile");
-  const { createdAt, updatedAt, ...userWithoutDates } = updatedUser || {};
 
 return {
   success: true,
   message: "Profile updated successfully.",
-  userData: userWithoutDates as ProfileFormData,
+  userData: updatedUser as unknown as ProfileFormData,
 };
 
   } catch (error: any) {

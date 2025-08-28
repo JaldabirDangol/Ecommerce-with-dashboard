@@ -8,10 +8,14 @@ const OrderSummary = () => {
 
   const selectedItems = items.filter((item: CartItem) => item.isSelected);
 
+  console.log(selectedItems,"selectedfitems")
+
   const subTotal = selectedItems.reduce(
     (total: number, item: CartItem) => total + item.price * item.quantity,
     0
   );
+
+  console.log(subTotal,"subtotal")
 
   const shipping = 100; 
   const voucherDiscount = 50;
