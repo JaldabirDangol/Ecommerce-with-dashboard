@@ -64,7 +64,7 @@ const OrderSummary = () => {
 
       <div className="flex justify-between border-t border-gray-300 pt-4 mt-4">
         <p className="font-bold text-xl text-gray-800">Total</p>
-        <p className="font-bold text-xl text-blue-700">Rs. {total}</p>
+        <p className="font-bold text-xl text-blue-700">Rs. {total.toFixed(2)}</p>
       </div>
 
       <button className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 hover:bg-blue-700 transition duration-200 text-lg font-semibold shadow-lg">

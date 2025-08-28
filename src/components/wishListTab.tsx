@@ -42,7 +42,7 @@ export const WishListTab = () => {
                 </span>
                 <div className="flex items-center gap-2">
                   <Button asChild size="sm" variant="outline">
-                    <Link href={`/products/${item.id}`}>View</Link>
+                    <Link href={`/product/${item.id}`}>View</Link>
                   </Button>
                   <Button
                     size="sm"

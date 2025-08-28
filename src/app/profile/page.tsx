@@ -1,13 +1,13 @@
 "use client";
 
+import OrderTab from "@/components/orderTab";
 import ProfileCard from "@/components/profileCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bell, CreditCard, Lock, Package, Trash } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { WishListTab } from "@/components/wishListTab";
+import { Bell, CreditCard, Lock, Trash } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type TabType = "profile" | "orders" | "wishlist" | "billing" | "notifications"  | "Delete Account";
 
@@ -49,26 +49,7 @@ export default function ProfilePage() {
         )}
 
         {activeTab === "orders" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package size={18} /> My Orders
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3 text-sm">
-                <li className="flex justify-between">
-                  <span>Apple MacBook Air M4 (2025)</span>
-                  <span className="text-green-600">Delivered</span>
-                </li>
-             <hr className="my-4 border-t border-gray-200" />
-                <li className="flex justify-between">
-                  <span>Samsung Galaxy S24 Ultra</span>
-                  <span className="text-yellow-600">Shipped</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+        <OrderTab/>
         )}
 
         {activeTab === "wishlist" && (
