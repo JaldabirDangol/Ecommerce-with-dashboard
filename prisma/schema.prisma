@@ -179,26 +179,26 @@ model CartItem {
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  userId     String      @unique
-  user       User        @relation(fields: [userId], references: [id])
-  total      Float
-  items      OrderItem[]
-  payment    Payment[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  total     Float
+  items     OrderItem[]
+  payment   Payment[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 model OrderItem {
-  id             String      @id @default(cuid())
-  orderId        String
-  productId      String
-  quantity       Int
+  id              String      @id @default(cuid())
+  orderId         String
+  productId       String
+  quantity        Int
   priceAtPurchase Float
-  status         OrderStatus @default(PENDING)  
+  status          OrderStatus @default(PENDING)  
 
-  order          Order       @relation(fields: [orderId], references: [id])
-  product        Product     @relation(fields: [productId], references: [id])
+  order           Order       @relation(fields: [orderId], references: [id])
+  product         Product     @relation(fields: [productId], references: [id])
 }
 
 model Payment {
