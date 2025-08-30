@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-08-27.basil", // use stable API
+  apiVersion: "2025-08-27.basil", 
 });
 
 export async function POST(req: Request) {
@@ -17,28 +17,29 @@ export async function POST(req: Request) {
       );
     }
 
-    const { items } = await req.json();
+    const { items } = await req.json(); //comes from buying when i clieck proceed on order summary
     if (!items || items.length === 0) {
       throw new Error("No items provided");
     }
 
-    // Build line items for Stripe
+    console.log(items,":itemss fdromn check session ")
+   
+    //needed for checkout seesion 
     const line_items = items.map((item: any) => ({
       price_data: {
         currency: "usd",
         product_data: {
           name: item.productName,
-          metadata: { productId: item.id }, // your internal ID
+          metadata: { productId: item.productId },  
         },
         unit_amount: Math.round(item.price * 100),
       },
       quantity: item.quantity,
     }));
 
-    // Create Stripe checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items,
+      line_items,  //above products being purchased which can be fetch in webhooks for creating order 
       mode: "payment",
       customer_email: session.user.email,
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/result?session_id={CHECKOUT_SESSION_ID}`,

@@ -15,7 +15,8 @@ export const GET = async () => {
       include: { items: { include: { product: true } } },
       orderBy: { createdAt: "desc" },
     });
-
+   
+    console.log("ordersssss",orders)
     return new Response(JSON.stringify({ orders }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

@@ -22,12 +22,15 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err: any) {
-    console.error("❌ Webhook signature failed:", err.message);
+    console.error(" Webhook signature failed:", err.message);
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
+
+
+    console.log(session,"session from webhook")
 
     if (!session.customer_email) {
       console.warn("❌ No customer email, skipping order creation.");
@@ -43,21 +46,21 @@ export async function POST(req: Request) {
       return new NextResponse("User not found", { status: 404 });
     }
 
-    // Fetch line items and expand product data
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
       expand: ["data.price.product"],
     });
-
+   
+     console.log(lineItems.data[0].price,"session  price from webhook")
     const total = (session.amount_total ?? 0) / 100;
 
-    // Safely create order items, skipping missing metadata
    const itemsToCreate = lineItems.data
   .map(item => {
     const product = item.price?.product as Stripe.Product;
-    const productId = product?.metadata?.productId;
+    const productId = product.metadata?.productId;
 
+    console.log(item.price,"item pricasdfasdfasdfasdf")
     if (!productId) {
-      console.warn("Skipping product with missing metadata:", product?.name);
+      console.warn(" product with missing priductID:", product?.name);
       return null;
     }
 
@@ -69,7 +72,7 @@ export async function POST(req: Request) {
   })
   .filter((item): item is { productId: string; quantity: number; priceAtPurchase: number } => Boolean(item));
 
-
+console.log(itemsToCreate,"items to ccrerate")
    const order = await prisma.order.create({
   data: {
     userId: user.id,

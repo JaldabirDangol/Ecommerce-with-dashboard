@@ -1,21 +1,36 @@
-"use client"
+"use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Order, OrderItem, Payment, Product } from "@prisma/client";
+
+
+interface OrderItemWithProduct extends OrderItem {
+  product?: Product | null;
+}
+
+
+interface OrderWithAllRelations extends Order {
+  items: OrderItemWithProduct[];
+  payment: Payment[];
+}
 
 const OrderTab = () => {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<OrderWithAllRelations[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("/api/orders");
-        if (!res.ok) throw new Error("Failed to fetch orders");
+        const res = await fetch(`${window.location.origin}/api/orders`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch orders");
+        }
 
-        const data = await res.json();
-        setOrders(data.orders);
+        const responseData = await res.json();
+        const fetchedOrders = Array.isArray(responseData) ? responseData : responseData.orders;
+        setOrders(fetchedOrders || []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -41,7 +56,9 @@ const OrderTab = () => {
     );
   }
 
-  console.log(orders,"order")
+  // The console log is now corrected to properly access the array
+  console.log(orders, "orders");
+
   if (!orders || orders.length === 0) {
     return (
       <Card>
@@ -64,21 +81,23 @@ const OrderTab = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package size={18} /> Order #{order.id.slice(0, 6)}
+              {/* This assumes the order status is derived from the first item */}
               <span
                 className={`ml-auto font-medium ${
-                  order.status === "DELIVERED"
+                  order.items[0]?.status === "DELIVERED"
                     ? "text-green-600"
-                    : order.status === "SHIPPED"
+                    : order.items[0]?.status === "SHIPPED"
                     ? "text-yellow-600"
                     : "text-gray-500"
                 }`}
               >
-                {order.status}
+                {order.items[0]?.status}
               </span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
+              {/* Using optional chaining to safely access items and product name */}
               {order.items?.map((item) => (
                 <li key={item.id} className="flex justify-between">
                   <span>{item.product?.name}</span>
