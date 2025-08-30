@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, LogOut, User } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react"
 
 import ProfileSettings1 from "@/components/profileSettings1";
 import Link from "next/link";
@@ -105,12 +106,21 @@ export default function ProfilSection() {
           <ProfileSetting2 />
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem className="cursor-pointer p-3 text-red-600 focus:text-red-600">
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Sign out</span>
-          </DropdownMenuItem>
+      <DropdownMenuItem
+  className="cursor-pointer p-3 text-red-600 focus:text-red-600"
+   onClick={() => signOut({ callbackUrl: "/login" })}
+
+>
+  <LogOut className="mr-2 h-4 w-4" />
+  <span>Sign out</span>
+</DropdownMenuItem>
+
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
 }
+
+
+
+

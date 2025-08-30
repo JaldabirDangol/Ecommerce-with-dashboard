@@ -6,13 +6,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function GET(
-  _req: Request,
-  { params }: { params: { sessionId: string } }
+  req: Request,
+  { params }: { params: Promise<{ sessionId: string }> }
 ) {
   try {
-    const session = await stripe.checkout.sessions.retrieve(params.sessionId);
+    const {sessionId} = await params;
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    const lineItems = await stripe.checkout.sessions.listLineItems(params.sessionId, {
+    const lineItems = await stripe.checkout.sessions.listLineItems(sessionId, {
       expand: ["data.price.product"],
       limit: 100,
     });
