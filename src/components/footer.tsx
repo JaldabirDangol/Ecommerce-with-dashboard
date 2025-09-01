@@ -1,7 +1,13 @@
-import React from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react'; // Example icons, ensure lucide-react is available or use alternatives
+"use client"
+import { Mail, MapPin, Phone } from 'lucide-react'; 
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+    const pathname = usePathname();
+  
+if (["/dashboard", "/login", "/signup"].includes(pathname)) {
+  return null;
+}
   return (
     <footer className="bg-gray-100 text-gray-700 py-12 px-4 sm:px-6 lg:px-8 mt-12 font-inter ">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

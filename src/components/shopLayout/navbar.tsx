@@ -11,9 +11,9 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const pathname = usePathname();
   
-  if (pathname.startsWith("/dashboard")) {
-    return null;
-  }
+if (["/dashboard", "/login", "/signup"].includes(pathname)) {
+  return null;
+}
 
   return (
     <header className="flex justify-between items-center w-full py-3 px-8 gap-8 rounded-3xl bg-white shadow-md">

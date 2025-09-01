@@ -8,7 +8,7 @@ const CategoryFilter = ({
   categories: { id: string; name: string }[];
 }) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [categoryCollapse, setCategoryCollapse] = useState(true);
+  const [categoryCollapse, setCategoryCollapse] = useState(false);
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>

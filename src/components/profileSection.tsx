@@ -93,9 +93,10 @@ export default function ProfilSection() {
                   <User className="h-3.5 w-3.5 mr-1.5" />
                   Profile
                 </Link>
-                <Button size="sm" className="text-xs h-8 flex-1">
-                  Upgrade
-                </Button>
+                <Link href="/dashboard" 
+                 className="text-xs h-8 flex-1 text-white bg-black flex items-center justify-center shadow-sm rounded-sm">
+                  Dashboard
+                </Link>
               </div>
             </div>
           </DropdownMenuLabel>

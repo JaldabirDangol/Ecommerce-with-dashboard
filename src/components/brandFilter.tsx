@@ -4,7 +4,7 @@ import {Collapse} from "react-collapse"
 
 const BrandFilter = ({ brands }: { brands: { brand: string }[] }) => {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [brandCollapse, setBrandCollapse]  = useState(true)
+  const [brandCollapse, setBrandCollapse]  = useState(false)
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>

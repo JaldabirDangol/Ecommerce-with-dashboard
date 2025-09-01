@@ -32,7 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-full` }
       >
         <SessionProvider>
-         <div className="px-4 py-2 md:px-8 lg:px-16 w-full  h-full">
+         <div className="py-2 md:px-8 px-4 lg:px-16   w-full  h-full">
           <Navbar/>
           {children}
         </div>
