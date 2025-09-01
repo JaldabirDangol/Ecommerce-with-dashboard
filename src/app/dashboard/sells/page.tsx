@@ -4,57 +4,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DollarSignIcon, ShoppingCartIcon, TrendingUpIcon, FileTextIcon, MoreHorizontalIcon, PlusCircleIcon } from 'lucide-react';
+import { latestOrderItem } from '@/actions/order'; // import your backend function
 
-// Define the data structure for a sales transaction
-interface Sale {
-  id: string;
-  customerName: string;
-  date: string;
-  status: 'Completed' | 'Refunded' | 'Processing';
-  amount: number;
-}
 
-// Mock data for sales transactions
-const sales: Sale[] = [
-  {
-    id: 'sale_1',
-    customerName: 'John Doe',
-    date: '2025-08-19',
-    status: 'Completed',
-    amount: 150.00,
-  },
-  {
-    id: 'sale_2',
-    customerName: 'Jane Smith',
-    date: '2025-08-18',
-    status: 'Processing',
-    amount: 75.50,
-  },
-  {
-    id: 'sale_3',
-    customerName: 'Michael Lee',
-    date: '2025-08-17',
-    status: 'Completed',
-    amount: 320.75,
-  },
-  {
-    id: 'sale_4',
-    customerName: 'Emily Davis',
-    date: '2025-08-16',
-    status: 'Refunded',
-    amount: 50.00,
-  },
-  {
-    id: 'sale_5',
-    customerName: 'Chris Wilson',
-    date: '2025-08-15',
-    status: 'Completed',
-    amount: 210.25,
-  },
-];
+const DashboardSalesPage = async () => {
+  const sales = await latestOrderItem();
 
-const DashboardSalesPage: React.FC = () => {
-  // Calculate summary metrics
   const totalSales = sales.reduce((sum, sale) => sum + sale.amount, 0).toFixed(2);
   const completedSalesCount = sales.filter(sale => sale.status === 'Completed').length;
   const processingSalesCount = sales.filter(sale => sale.status === 'Processing').length;
@@ -162,12 +117,8 @@ const DashboardSalesPage: React.FC = () => {
                         {sale.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {sale.date}
-                    </TableCell>
-                    <TableCell className="text-right font-medium">
-                      ${sale.amount.toFixed(2)}
-                    </TableCell>
+                    <TableCell className="hidden md:table-cell">{sale.date}</TableCell>
+                    <TableCell className="text-right font-medium">${sale.amount.toFixed(2)}</TableCell>
                     <TableCell>
                       <div className="flex items-center justify-end space-x-2">
                         <Button variant="ghost" size="icon">

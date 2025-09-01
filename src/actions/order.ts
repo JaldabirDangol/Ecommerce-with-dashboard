@@ -59,3 +59,40 @@ export const getCustomerListForAdmin = async () => {
     return [];
   }
 };
+
+
+export const latestOrderItem = async () => {
+  try {
+    const session = await auth();
+    if (!session) throw new Error("Not authenticated");
+
+    const orders = await prisma.order.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10, // optional: latest 10 orders
+      select: {
+        id: true,
+        user: { select: { name: true } },
+        total: true,
+        items: { select: { status: true } },
+        updatedAt: true,
+      },
+    });
+
+    const sales = orders.map((order) => ({
+      id: order.id,
+      customerName: order.user.name,
+      date: order.updatedAt.toISOString().split("T")[0],
+      status:
+        order.items.length > 0
+          ? order.items[0].status 
+          : "Processing", 
+      amount: order.total,
+    }));
+
+    console.log(sales, "Transformed sales");
+    return sales;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
