@@ -10,7 +10,6 @@ interface OrderItemWithProduct extends OrderItem {
   product?: Product | null;
 }
 
-
 interface OrderWithAllRelations extends Order {
   items: OrderItemWithProduct[];
   payment: Payment[];
@@ -55,9 +54,6 @@ const OrderTab = () => {
       </Card>
     );
   }
-
-  // The console log is now corrected to properly access the array
-  console.log(orders, "orders");
 
   if (!orders || orders.length === 0) {
     return (

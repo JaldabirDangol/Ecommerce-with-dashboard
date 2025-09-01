@@ -37,7 +37,7 @@ const ProductFilter = async () => {
     const color = await ColorFetcher();
 
   return ( 
-    <div className="max-w-[20%] w-full flex flex-col gap-2 bg-white p-4">
+    <div className="max-w-[20%] w-full h-full flex flex-col gap-2 bg-white p-4">
         
         ProductFilter 
         

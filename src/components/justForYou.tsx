@@ -3,9 +3,8 @@ import ProductCard from '@/components/ProductCard'
 import {prisma} from "@/lib/db"
 
 
-
 const JustForYou =async () => {
-
+   
   const products = await prisma.product.findMany({
       take:12,
       orderBy:{createdAt:"desc"}

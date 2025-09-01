@@ -75,6 +75,7 @@ model User {
   wishlist         Wishlist?
   sessions         Session[]
   account          Account[]
+  payment          Payment[]
 
   defaultAddressId String?      @unique
   shippingAddressId String?     @unique
@@ -184,7 +185,7 @@ model Order {
   user      User         @relation(fields: [userId], references: [id])
   total     Float
   items     OrderItem[]
-  payment   Payment[]
+  payment   Payment?
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 }
@@ -203,14 +204,16 @@ model OrderItem {
 
 model Payment {
   id        String    @id @default(cuid())
-  orderId   String
+  orderId   String    @unique          
   method    String
   status    String
   amount    Float
-
+  userId    String?
+  user      User?      @relation(fields: [userId], references: [id])
   order     Order     @relation(fields: [orderId], references: [id])
   createdAt DateTime  @default(now())
 }
+
 
 model Wishlist {
   id        String    @id @default(cuid())

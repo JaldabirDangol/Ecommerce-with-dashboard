@@ -37,7 +37,7 @@ const ProductsPage = async( {searchParams}:SearchParamsProps ) => {
  if (!products || products.length === 0) {
     return (    <div className="w-full flex justify-center max-w-9xl  rounded-xl gap-2 shadow-sm mt-2">  
       <ProductFilter/>
-    <div className="flex flex-col items-center justify-center w-full min-h-[250px] p-8  rounded-3xl bg-gray-50 border border-gray-200 shadow-inner">
+    <div className="flex flex-col items-center justify-center w-full h-screen p-8  rounded-3xl bg-gray-50 border border-gray-200 shadow-inner">
       <CubeTransparentIcon className="w-16 h-16 text-gray-400 mb-4 animate-pulse" />
       <h2 className="text-2xl font-semibold text-gray-700">No products found</h2>
       <p className="text-gray-500 text-base mt-2">
@@ -49,7 +49,7 @@ const ProductsPage = async( {searchParams}:SearchParamsProps ) => {
   }
 
   return (
-    <div className="w-full flex justify-center max-w-9xl bg-gray-50  rounded-xl gap-2 shadow-sm mt-2">
+    <div className="w-full flex h-full justify-center max-w-9xl bg-gray-50  rounded-xl gap-2 shadow-sm mt-2">
            <ProductFilter/>
      
           <div className='flex flex-1 flex-wrap gap-2 w-full p-4'>

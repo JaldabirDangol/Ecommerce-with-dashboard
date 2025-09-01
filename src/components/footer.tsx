@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from 'lucide-react'; // Example icons, ensure luc
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 text-gray-700 py-12 px-4 sm:px-6 lg:px-8 mt-12 font-inter">
+    <footer className="bg-gray-100 text-gray-700 py-12 px-4 sm:px-6 lg:px-8 mt-12 font-inter ">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
         {/* Column 1: Hexa Mart Info */}

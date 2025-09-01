@@ -21,9 +21,10 @@ export async function POST(req: Request) {
       sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (err: any) {
-    console.error(" Webhook signature failed:", err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+  } catch (err) {
+    const error = err as Error;
+    console.error(" Webhook signature failed:", error.message);
+    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {
