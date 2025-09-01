@@ -2,7 +2,7 @@ interface LowStockItem {
   id: string;
   name: string;
   stock: number;
-  price: number; // keep as number
+  price: number;
 }
 
 interface LowStockProductsProps {

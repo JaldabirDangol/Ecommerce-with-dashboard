@@ -46,7 +46,7 @@ const DashboardPage = async () => {
           <LowStockProducts products={data.lowStockProducts} />
         </div>
 
-        <div className="flex w-full gap-3 justify-between">
+        <div className="flex w-full  gap-3 justify-between h-93">
           <UserHitRateChart  />
           <RecentActivity recentActivities={data.recentActivities} />
         </div>

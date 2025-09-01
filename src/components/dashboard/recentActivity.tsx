@@ -1,93 +1,70 @@
+"use client";
 
-
-
-
-
-
-
-// This would be your main page or a parent component
 import React from 'react';
-import RecentActivity from './RecentActivity';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
-// The raw data, typically fetched from an API
-const recentOrdersData = [
-    {
-      id: "cl1x0abc123",
-      total: 500,
-      user: { name: "Sonar Gabur" },
-      createdAt: "2025-09-01T10:30:00.000Z"
-    },
-    {
-      id: "cl1x0abc124",
-      total: 1200,
-      user: { name: "Jane Doe" },
-      createdAt: "2025-09-01T09:45:00.000Z"
-    },
-];
-
-// Helper function to calculate time difference
-function timeSince(date) {
-  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-  let interval = seconds / 31536000;
-  if (interval > 1) return Math.floor(interval) + " years ago";
-  interval = seconds / 2592000;
-  if (interval > 1) return Math.floor(interval) + " months ago";
-  interval = seconds / 86400;
-  if (interval > 1) return Math.floor(interval) + " days ago";
-  interval = seconds / 3600;
-  if (interval > 1) return Math.floor(interval) + " hours ago";
-  interval = seconds / 60;
-  if (interval > 1) return Math.floor(interval) + " minutes ago";
-  return Math.floor(seconds) + " seconds ago";
+interface RecentActivityProps {
+  recentActivities: {
+    id: string;
+    user: {
+      name: string | null;
+    };
+    createdAt: Date;
+    total: number;
+  }[];
 }
 
-
-
-
-const RecentActivityItem = ({ icon, title, description, timeAgo }) => (
-  <div className="flex items-center space-x-4 p-3 bg-white rounded-lg shadow-sm mb-3">
-    <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${icon.bgClass}`}>
-    
-      {icon.type === 'shoppingCart' && (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5.4M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 100 4 2 2 0 000-4z" />
-        </svg>
-      )}
-      {icon.type === 'bell' && (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-      )}
-    </div>
-    <div className="flex-grow">
-      <p className="font-semibold text-gray-800">{title}</p>
-      <p className="text-sm text-gray-600">{description}</p>
-    </div>
-    <div className="flex-shrink-0 text-sm text-gray-500">
-      {timeAgo}
-    </div>
-  </div>
-);
-
-const RecentActivity = ({ activities }) => {
+const RecentActivity = ({ recentActivities }: RecentActivityProps) => {
   return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-md w-2/5 h-93">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
-      {activities.length === 0 ? (
-        <p className="text-gray-600">No recent activity.</p>
-      ) : (
-        <div>
-          {activities.map((activity, index) => (
-            <RecentActivityItem
-              key={index} // In a real app, use a unique ID from the activity data
-              icon={activity.icon}
-              title={activity.title}
-              description={activity.description}
-              timeAgo={activity.timeAgo}
-            />
-          ))}
-        </div>
-      )}
+    <div className="flex flex-col overflow-auto w-full h-full max-w-md mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-lg border border-gray-200">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">Recent Activity</h2>
+      </div>
+      
+      <div className="space-y-3">
+        {recentActivities.length > 0 ? (
+          recentActivities.map((activity) => (
+            <div key={activity.id} className="flex items-center p-4 bg-gray-50 rounded-xl transition-colors hover:bg-gray-100">
+              {/* Icon Container */}
+              <div className="flex items-center justify-center w-10 h-10 bg-emerald-500 rounded-full text-white shrink-0 shadow-sm">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-shopping-cart"
+                >
+                  <circle cx="8" cy="21" r="1" />
+                  <circle cx="19" cy="21" r="1" />
+                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                </svg>
+              </div>
+
+              {/* Text Content */}
+              <div className="flex-1 min-w-0 ml-4">
+                <div className="text-sm font-medium text-gray-900">New item sold</div>
+                <div className="text-xs text-gray-500 truncate mt-0.5">
+                  {activity.user.name || "A user"} purchased an item for ${activity.total.toFixed(2)}
+                </div>
+              </div>
+
+              {/* Timestamp */}
+              <div className="ml-auto text-xs text-gray-400 shrink-0">
+                {formatDistanceToNow(parseISO(activity.createdAt.toISOString()), { addSuffix: true })}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-8">
+            No recent activity to display.
+          </div>
+        )}
+      </div>
     </div>
   );
 };
