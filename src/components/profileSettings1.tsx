@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import {
   DropdownMenuGroup,
@@ -6,10 +8,21 @@ import {
 import { Bell, Heart, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useWishListStore } from "@/store/wishListStore";
+import { useEffect, useState } from "react";
+import { getOrderCount } from "@/actions/order";
 
 const ProfileSettings1 = () => {
   const wishlistLength = useWishListStore((state) => state.items.length);
+  const [orderLength, setOrderLength] = useState<number>(0);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchOrderCount = async () => {
+      const count = await getOrderCount();
+      setOrderLength(count);
+    };
+    fetchOrderCount();
+  }, []);
 
   return (
     <DropdownMenuGroup>
@@ -19,7 +32,9 @@ const ProfileSettings1 = () => {
       >
         <ShoppingBag className="mr-2 h-4 w-4" />
         <span>Orders</span>
-        <Badge variant="outline" className="ml-auto">3</Badge>
+        <Badge variant="outline" className="ml-auto">
+          {orderLength ?? 0}
+        </Badge>
       </DropdownMenuItem>
 
       <DropdownMenuItem

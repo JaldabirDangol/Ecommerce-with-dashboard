@@ -1,11 +1,13 @@
 "use client";
 
+import DeleteAccount from "@/components/deleteAccount";
 import OrderTab from "@/components/orderTab";
 import ProfileCard from "@/components/profileCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import BillingSection from "@/components/userPayment";
 import { WishListTab } from "@/components/wishListTab";
-import { Bell, CreditCard, Lock, Trash } from "lucide-react";
+import { Bell } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -57,17 +59,7 @@ export default function ProfilePage() {
         )}
 
         {activeTab === "billing" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard size={18} /> Billing
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Saved Card: **** **** **** 1234</p>
-              <p>Payment Method: Visa</p>
-            </CardContent>
-          </Card>
+          <BillingSection activeTab={activeTab}/>
         )}
 
         {activeTab === "notifications" && (
@@ -87,18 +79,7 @@ export default function ProfilePage() {
         )}
 
         {activeTab === "Delete Account" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-600">
-                <Lock size={18} /> Account Security
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button variant="destructive" className="flex items-center gap-2">
-                <Trash size={16} /> Delete Account
-              </Button>
-            </CardContent>
-          </Card>
+       <DeleteAccount/>
         )}
 
 
