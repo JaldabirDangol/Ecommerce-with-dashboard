@@ -77,7 +77,6 @@ const OrderTab = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package size={18} /> Order #{order.id.slice(0, 6)}
-              {/* This assumes the order status is derived from the first item */}
               <span
                 className={`ml-auto font-medium ${
                   order.items[0]?.status === "DELIVERED"
@@ -93,7 +92,6 @@ const OrderTab = () => {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
-              {/* Using optional chaining to safely access items and product name */}
               {order.items?.map((item) => (
                 <li key={item.id} className="flex justify-between">
                   <span>{item.product?.name}</span>

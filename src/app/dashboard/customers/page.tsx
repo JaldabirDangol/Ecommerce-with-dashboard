@@ -1,65 +1,26 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { getCustomerListForAdmin } from '@/actions/order';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRightIcon, MoreHorizontalIcon, PlusCircleIcon, SearchIcon } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { MoreHorizontalIcon, PlusCircleIcon, SearchIcon } from 'lucide-react';
+import React from 'react';
 
-// Define the data structure for a customer
 interface Customer {
   id: string;
   name: string;
   email: string;
-  status: 'Active' | 'Inactive' | 'Pending';
-  lastOrder: string;
+  status: string | null;
+  lastOrder: string | null;
   totalOrders: number;
 }
 
-// Mock data to display on the page
-const customers: Customer[] = [
-  {
-    id: 'cust_1',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    status: 'Active',
-    lastOrder: '2025-08-19',
-    totalOrders: 12,
-  },
-  {
-    id: 'cust_2',
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    status: 'Active',
-    lastOrder: '2025-08-15',
-    totalOrders: 5,
-  },
-  {
-    id: 'cust_3',
-    name: 'Michael Lee',
-    email: 'michael.lee@example.com',
-    status: 'Inactive',
-    lastOrder: '2025-07-20',
-    totalOrders: 2,
-  },
-  {
-    id: 'cust_4',
-    name: 'Emily Davis',
-    email: 'emily.davis@example.com',
-    status: 'Pending',
-    lastOrder: '2025-08-18',
-    totalOrders: 1,
-  },
-  {
-    id: 'cust_5',
-    name: 'Chris Wilson',
-    email: 'chris.wilson@example.com',
-    status: 'Active',
-    lastOrder: '2025-08-10',
-    totalOrders: 8,
-  },
-];
 
-const DashboardCustomersPage: React.FC = () => {
+
+
+const DashboardCustomersPage = async () => {
+  const customers:Customer[] = await getCustomerListForAdmin();
+
   return (
     <div className="flex-1 flex flex-col p-4 md:p-8 space-y-4 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <header className="flex items-center justify-between">
@@ -68,7 +29,6 @@ const DashboardCustomersPage: React.FC = () => {
           <p className="text-sm text-gray-500 dark:text-gray-400">Manage your customer base and view their activity.</p>
         </div>
         <div className="flex items-center space-x-2">
-          {/* Example of a search bar or filter, you can add more functionality here */}
           <Button variant="outline" size="sm" className="hidden sm:inline-flex">
             <SearchIcon className="h-4 w-4 mr-2" /> Search
           </Button>
@@ -78,13 +38,10 @@ const DashboardCustomersPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Main content area with a card for the customer table */}
       <Card className="flex-1 overflow-hidden">
         <CardHeader>
           <CardTitle>Customer List</CardTitle>
-          <CardDescription>
-            A list of all your customers.
-          </CardDescription>
+          <CardDescription>A list of all your customers.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="relative w-full overflow-auto">
@@ -110,23 +67,21 @@ const DashboardCustomersPage: React.FC = () => {
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         className={
-                          customer.status === 'Active' ? 'bg-green-100 text-green-800 border-green-200' : 
-                          customer.status === 'Inactive' ? 'bg-red-100 text-red-800 border-red-200' : 
-                          'bg-yellow-100 text-yellow-800 border-yellow-200'
+                          customer.status === 'Active'
+                            ? 'bg-green-100 text-green-800 border-green-200'
+                            : customer.status === 'Inactive'
+                            ? 'bg-red-100 text-red-800 border-red-200'
+                            : 'bg-yellow-100 text-yellow-800 border-yellow-200'
                         }
                       >
                         {customer.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {customer.lastOrder}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {customer.totalOrders}
-                    </TableCell>
+                    <TableCell className="hidden md:table-cell">{customer.lastOrder}</TableCell>
+                    <TableCell className="hidden md:table-cell">{customer.totalOrders}</TableCell>
                     <TableCell>
                       <div className="flex items-center justify-end space-x-2">
                         <Button variant="outline" size="sm">

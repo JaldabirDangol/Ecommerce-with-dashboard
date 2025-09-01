@@ -28,7 +28,7 @@ const ProfileCard = () => {
       }
     };
     fetchUserData();
-  }, [session]); 
+  }, [session, updateUserDataStore]); 
 
   const user = userData as any;
 

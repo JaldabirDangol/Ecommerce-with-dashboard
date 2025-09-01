@@ -23,7 +23,6 @@ export const LoginForm = () => {
       action={formAction}
       className="flex w-full max-w-md flex-col gap-5 rounded-2xl bg-white p-8 shadow-lg"
     >
-      {/* Email */}
       <div className="flex flex-col gap-2">
         <label htmlFor="email" className="text-sm font-semibold text-gray-700">
           Email
@@ -37,7 +36,6 @@ export const LoginForm = () => {
         />
       </div>
 
-      {/* Password */}
       <div className="flex flex-col gap-2">
         <label
           htmlFor="password"

@@ -19,8 +19,8 @@ const OrderSummary = () => {
     0
   );
 
-  const shipping = 100;
-  const voucherDiscount = 50;
+  const shipping = subTotal ? 100 : 0;
+  const voucherDiscount = subTotal ? 50 : 0;
   const total = subTotal + shipping - voucherDiscount;
 
   const handleCheckout = async () => {

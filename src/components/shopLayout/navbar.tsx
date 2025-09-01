@@ -11,7 +11,11 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const pathname = usePathname();
   
-if (["/dashboard", "/login", "/signup"].includes(pathname)) {
+if (
+  pathname.startsWith("/dashboard") || 
+  pathname === "/login" || 
+  pathname === "/signup"
+) {
   return null;
 }
 
