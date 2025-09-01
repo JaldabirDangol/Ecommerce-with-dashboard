@@ -41,8 +41,8 @@ const formFields = [
 ];
 
 export default function Page() {
-  const searchParams = useSearchParams(); // Use useSearchParams
-  const productId = searchParams.get("id"); // Get the 'id' query parameter
+  const searchParams = useSearchParams(); 
+  const productId = searchParams.get("id"); 
 
   const methods = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -132,7 +132,6 @@ export default function Page() {
           onSubmit={submitHandler}
           className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl bg-white p-8 rounded-xl shadow-md border border-gray-200"
         >
-          {/* Form fields and buttons remain the same */}
           <div className="flex flex-col gap-4">
             {formFields.map(({ id, label, type, placeholder, step }) => (
               <div key={id}>

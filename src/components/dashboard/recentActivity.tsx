@@ -1,11 +1,53 @@
-// components/RecentActivity.js
-import React from 'react'; // React 19 is implicitly imported in Next.js 15 pages/components
+
+
+
+
+
+
+
+// This would be your main page or a parent component
+import React from 'react';
+import RecentActivity from './RecentActivity';
+
+// The raw data, typically fetched from an API
+const recentOrdersData = [
+    {
+      id: "cl1x0abc123",
+      total: 500,
+      user: { name: "Sonar Gabur" },
+      createdAt: "2025-09-01T10:30:00.000Z"
+    },
+    {
+      id: "cl1x0abc124",
+      total: 1200,
+      user: { name: "Jane Doe" },
+      createdAt: "2025-09-01T09:45:00.000Z"
+    },
+];
+
+// Helper function to calculate time difference
+function timeSince(date) {
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  let interval = seconds / 31536000;
+  if (interval > 1) return Math.floor(interval) + " years ago";
+  interval = seconds / 2592000;
+  if (interval > 1) return Math.floor(interval) + " months ago";
+  interval = seconds / 86400;
+  if (interval > 1) return Math.floor(interval) + " days ago";
+  interval = seconds / 3600;
+  if (interval > 1) return Math.floor(interval) + " hours ago";
+  interval = seconds / 60;
+  if (interval > 1) return Math.floor(interval) + " minutes ago";
+  return Math.floor(seconds) + " seconds ago";
+}
+
+
+
 
 const RecentActivityItem = ({ icon, title, description, timeAgo }) => (
   <div className="flex items-center space-x-4 p-3 bg-white rounded-lg shadow-sm mb-3">
     <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${icon.bgClass}`}>
-      {/* Assuming you're using an icon library or SVG directly */}
-      {/* For simplicity, we'll use emojis or basic shapes. In a real app, use an actual icon component. */}
+    
       {icon.type === 'shoppingCart' && (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5.4M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 100 4 2 2 0 000-4z" />
