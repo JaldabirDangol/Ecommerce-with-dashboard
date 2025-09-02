@@ -56,7 +56,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md flex flex-col p-4 rounded-lg shadow-lg bg-gray-50">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md flex flex-col p-4 rounded-lg shadow-lg bg-gray-50">
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
           Title
@@ -71,19 +71,19 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         />
       </div>
 
-      <div className="max-w-[450px] max-h-[350px] h-full w-full flex flex-col gap-2">
-        <label className="block text-sm font-medium text-gray-700">Upload Image</label>
-        <div className="relative aspect-square overflow-hidden rounded-2xl shadow-md border bg-white flex items-center justify-center">
-          <Image
-            src={imageUrl || "https://placehold.co/400x400/E5E7EB/4B5563?text=Placeholder"}
-            alt="Uploaded preview"
-            width={400}
-            height={400}
-            className="object-contain transition-transform duration-300 hover:scale-105"
-            priority 
-          />
-        </div>
-      </div>
+     <div className="w-full h-[350px]  flex flex-col gap-2">
+  <label className="block text-sm font-medium text-gray-700">Upload Image</label>
+  <div className="relative h-full w-[350px] overflow-hidden rounded-2xl shadow-md border bg-white flex items-center justify-center">
+    <Image
+      src={imageUrl || "https://placehold.co/400x400/E5E7EB/4B5563?text=Placeholder"}
+      alt="Uploaded preview"
+      fill
+      className="object-contain transition-transform duration-300 hover:scale-105"
+      priority
+    />
+  </div>
+</div>
+
 
       <CldUploadWidget
         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!} 

@@ -9,7 +9,7 @@ import { CarasouelCard } from "@/components/carssouelProduct"
 
 const products = [
   {
-    title: "iPhone 16 Pro Max",
+    title: "iPhone 17 Pro Max",
     description: "Experience the power of the A17 chip and stunning camera system in your palm.",
     label: "📱 Premium Smartphone",
     imageUrl: "/iphone-16-pro-max.webp", 

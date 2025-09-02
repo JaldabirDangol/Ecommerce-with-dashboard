@@ -2,7 +2,6 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link';
 
-
 async function getCategories() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product/category`, {
@@ -32,7 +31,7 @@ export default async function Categories() {
       {categoriesItem.map((item) => (
         <Link
           key={item.id}
-          href={item.slug}
+          href={`/product?search=${item.slug}`}
           target="_blank"  
           rel="noopener noreferrer"
           className="flex flex-col items-center justify-center p-2 rounded-xl bg-main-300 hover:shadow-md transition"
@@ -41,10 +40,9 @@ export default async function Categories() {
             <Image
               width={64}
               height={64}
- src={`https://picsum.photos/seed/${item.id}/64/64`}
+             src={item.image ?? ""}
               alt={item.name}
-              className="object-contain max-h-[90%] max-w-[90%]"
-              unoptimized
+              className="object-contain max-h-[90%] max-w-[90%] w-full"
             />
           </div>
           <span className="mt-2 text-sm text-center">{item.name}</span>

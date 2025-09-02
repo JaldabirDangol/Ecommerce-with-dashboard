@@ -42,6 +42,7 @@ const category = await prisma.productCategory.create({
   },
 });
 
+
    return NextResponse.json(
   { success: true, category, message: "New Category Created successfully...." },
   { status: 200 }

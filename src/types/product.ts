@@ -51,7 +51,7 @@ export interface WishlistItemBackend {
   product: {
     name: string;
     price: number;
-    image: string;
+    images: [string];
     description?: string;
     dateAdded: Date;
   }

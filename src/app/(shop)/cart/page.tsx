@@ -41,7 +41,8 @@ const cartPage = async () => {
         </div>
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <CartItem key={item.id} productId={item.product.id} />
+           <CartItem key={item.id} cartItemId={item.id} productId={item.product.id} />
+
           ))
         ) : (
           <div className="text-center text-gray-500 text-lg mt-10">Your cart is empty.</div>

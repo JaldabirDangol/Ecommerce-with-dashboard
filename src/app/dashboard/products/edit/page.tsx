@@ -6,10 +6,10 @@ import { useForm, FormProvider } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import ImageUpload from "@/components/uploadImage";
 import { useActionState, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation"; // Use useSearchParams instead of useParams
+import { useSearchParams } from "next/navigation"; 
 import { updateProductDetails, getProductById } from "@/actions/product";
 import { toast } from "sonner";
-import { Product } from "@prisma/client"; // Assuming you have a Prisma client type
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -53,6 +53,8 @@ export default function Page() {
   const [categories, setCategories] = useState<{ name: string; image: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       if (!productId) {
@@ -85,6 +87,7 @@ export default function Page() {
             colorOptions: product.colorOptions || [],
           });
         }
+
       } catch (err) {
         console.error(err);
         toast.error("Failed to load product data.");
@@ -115,6 +118,7 @@ export default function Page() {
       }
     }
     formAction(formData);
+     router.push("/dashboard"); 
   });
 
   if (loading) {

@@ -37,7 +37,7 @@ export const useWishListStore = create(
             id: item.productId,
             name: item.product.name,
             price: item.product.price,
-            image: item.product.image,
+            image: item.product.images[0],
             description: item.product.description,
             dateAdded: item.product.dateAdded,
           }));

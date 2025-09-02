@@ -53,7 +53,7 @@ const LowStockProducts = ({ products }: LowStockProductsProps) => {
                   <td className="py-3 px-4 text-left font-medium">
                     <span
                       className={
-                        item.stock <= 5 ? "text-red-600 font-bold" : ""
+                        item.stock <= 10 ? "text-red-600 font-bold" : ""
                       }
                     >
                       {item.stock}

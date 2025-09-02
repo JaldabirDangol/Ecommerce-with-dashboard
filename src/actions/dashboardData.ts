@@ -12,7 +12,7 @@ export const DashboardData = async () => {
     const totalSells = totalSellsResult._sum.total || 0;
 
     const lowStockProducts = await prisma.product.findMany({
-      where: { stock: { lt: 10 } }, 
+      where: { stock: { lt: 20 } }, 
       select: { id: true, name: true, stock: true ,price:true },
       take: 10, 
     });

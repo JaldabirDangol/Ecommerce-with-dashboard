@@ -8,7 +8,7 @@ export default async function ShopPage() {
 
   const product1 = await prisma.product.findUnique({
     where:{
-      id:"cmdvbws2v0002h1e4cvlr4vsw"
+      id:"cmf1k7lcs000kh1ggxmroo74o"
     }
   })
     const product2 = await prisma.product.findUnique({

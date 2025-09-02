@@ -36,25 +36,34 @@ export const POST = async (req: NextRequest) => {
       where: { userId },
     });
 
-    if (wishlist) {
-      await prisma.wishlist.update({
-        where: { userId },
-        data: {
-          items: {
-            create: { productId },
-          },
+  if (wishlist) {
+  const exists = await prisma.wishlistItem.findFirst({
+    where: { wishlistId: wishlist.id, productId },
+  });
+
+  if (!exists) {
+    await prisma.wishlist.update({
+      where: { userId },
+      data: {
+        items: {
+          create: { productId },
         },
-      });
-    } else {
-      await prisma.wishlist.create({
-        data: {
-          userId,
-          items: {
-            create: { productId },
-          },
-        },
-      });
-    }
+      },
+    });
+  } else {
+    return NextResponse.json({ success: true, message: "Product already in wishlist" }, { status: 200 });
+  }
+} else {
+  await prisma.wishlist.create({
+    data: {
+      userId,
+      items: {
+        create: { productId },
+      },
+    },
+  });
+}
+
 
     return NextResponse.json({ success: true, message: "Wishlist updated" }, { status: 200 });
   } catch (error) {

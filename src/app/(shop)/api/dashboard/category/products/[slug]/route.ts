@@ -5,10 +5,10 @@ import { prisma } from "@/lib/db";
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { slug: string } }
+    { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
-        const { slug } = params;
+        const { slug } = await params;
 
         console.log("got req in backend")
 

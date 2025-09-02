@@ -7,20 +7,20 @@ const ProductFetcher = async(searchQuery?: string)=>{
 const page = 1;
 const limit = 30;
 
-     const allProducts= await prisma.product.findMany({
+    const allProducts = await prisma.product.findMany({
+  where: searchQuery
+    ? {
+        OR: [
+          { name: { contains: searchQuery, mode: "insensitive" } },
+          { category: { slug: { contains: searchQuery, mode: "insensitive" } } },
+        ],
+      }
+    : {},
+  skip: (page - 1) * limit,
+  take: limit,
+  orderBy: { createdAt: "desc" },
+});
 
-        where: searchQuery
-      ? {
-          name: {
-            contains: searchQuery,      
-            mode: "insensitive",       
-          },
-        }
-      : {},    
-        skip: (page - 1) * limit, 
-        take: limit, 
-       orderBy:{createdAt:"desc"},
-     })
 
      return allProducts;
 }

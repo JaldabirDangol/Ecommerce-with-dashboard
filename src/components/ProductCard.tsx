@@ -19,9 +19,9 @@ const ProductCard = ({imageUrl,name,rating,price,description,id}:ProductCardProp
         <Image
   width={64}
   height={64}
-  src={`https://picsum.photos/64/64?random=${Math.random()}`}
+  src={imageUrl ?? ""}
   alt={name}
-  className="object-contain max-h-[90%] max-w-[90%]"
+  className="object-contain max-h-[90%] max-w-[90%] w-full"
   unoptimized
 />
        </div>

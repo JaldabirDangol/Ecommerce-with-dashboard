@@ -11,9 +11,10 @@ import ProductDescription from "./productDescription";
 
 interface CartItemProps {
   productId: string;
+  cartItemId:string
 }
 
-export const CartItem = ({ productId }: CartItemProps) => {
+export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
   const { items, toggleSelected, removeFromCart } = useCartStore();
   const [isPending, startTransition] = useTransition();
 
@@ -26,7 +27,7 @@ export const CartItem = ({ productId }: CartItemProps) => {
   const deleteCartItemHandler = async () => {
     startTransition(async () => {
       try {
-        const res = await deleteCartItem(item?.productId);
+        const res = await deleteCartItem(cartItemId);
         toast(res.message);
         removeFromCart(item.productId);
       } catch (error) {

@@ -124,6 +124,7 @@ export default function CategoryProductPage() {
         }
 
         setProducts(data.products || []);
+      
       } catch (err) {
         const error =  err as Error;
         setError(error.message);

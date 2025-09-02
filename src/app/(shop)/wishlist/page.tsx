@@ -12,10 +12,12 @@ import { toast } from "sonner";
 
 const WishlistPage = () => {
   const { items, removeFromWishList, fetchAndSetWishlist } = useWishListStore();
+
+  console.log(items,"fagsagfsdf")
   const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
-    fetchAndSetWishlist(); // fetch wishlist on page load
+    fetchAndSetWishlist(); 
   }, [fetchAndSetWishlist]);
 
   const handleRemoveItem = (itemId: string) => {
@@ -80,7 +82,7 @@ const WishlistPage = () => {
             >
               <div className="flex items-center gap-4">
                 <Image
-                  src={item.image}
+                  src={item?.image}
                   alt={item.name}
                   width={100}
                   height={100}
@@ -88,7 +90,11 @@ const WishlistPage = () => {
                 />
                 <div>
                   <h2 className="font-medium">{item.name}</h2>
-                  <p className="text-sm text-gray-500">{item.description}</p>
+              <p className="text-sm text-gray-500">
+  { item.description && item?.description?.length > 200
+    ? item.description.slice(0, 200) + "..."
+    : item.description}
+</p>
                   <p className="text-red-500 font-semibold">${item.price}</p>
                   <p className="text-xs text-gray-400">
                     Added on{" "}
