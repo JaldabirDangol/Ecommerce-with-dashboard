@@ -76,6 +76,7 @@ model User {
   sessions         Session[]
   account          Account[]
   payment          Payment[]
+  notifications  Notification[]
 
   defaultAddressId String?      @unique
   shippingAddressId String?     @unique
@@ -233,3 +234,14 @@ model WishlistItem {
   @@unique([wishlistId, productId])
 }
 
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // e.g. "ORDER_PLACED", "ORDER_SHIPPED", "PROMOTION"
+  message   String   // actual notification text
+  link      String?  // optional, e.g. "/orders/123"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+}

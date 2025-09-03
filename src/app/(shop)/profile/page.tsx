@@ -1,13 +1,12 @@
 "use client";
 
 import DeleteAccount from "@/components/deleteAccount";
+import Notifications from "@/components/notifications";
 import OrderTab from "@/components/orderTab";
 import ProfileCard from "@/components/profileCard";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BillingSection from "@/components/userPayment";
 import { WishListTab } from "@/components/wishListTab";
-import { Bell } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -61,22 +60,9 @@ export default function ProfilePage() {
         {activeTab === "billing" && (
           <BillingSection activeTab={activeTab}/>
         )}
-
-        {activeTab === "notifications" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell size={18} /> Notifications
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="list-disc list-inside text-sm">
-                <li>Your order #1234 has been shipped</li>
-                <li>New discount on laptops this week!</li>
-              </ul>
-            </CardContent>
-          </Card>
-        )}
+{activeTab === "notifications" && (
+  <Notifications/>
+)}
 
         {activeTab === "Delete Account" && (
        <DeleteAccount/>

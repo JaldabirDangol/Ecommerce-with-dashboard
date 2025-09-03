@@ -68,7 +68,7 @@ export const latestOrderItem = async () => {
 
     const orders = await prisma.order.findMany({
       orderBy: { createdAt: "desc" },
-      take: 10, // optional: latest 10 orders
+      take: 10, 
       select: {
         id: true,
         user: { select: { name: true } },
