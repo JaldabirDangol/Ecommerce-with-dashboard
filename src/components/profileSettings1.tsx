@@ -14,6 +14,7 @@ import { getOrderCount } from "@/actions/order";
 const ProfileSettings1 = () => {
   const wishlistLength = useWishListStore((state) => state.items.length);
   const [orderLength, setOrderLength] = useState<number>(0);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,6 +23,20 @@ const ProfileSettings1 = () => {
       setOrderLength(count);
     };
     fetchOrderCount();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch("/api/notifications"); 
+        const data = await res.json();
+        const unreadCount = data.filter((n: any) => !n.isRead).length;
+        setNotificationCount(unreadCount);
+      } catch (err) {
+        console.error("Failed to fetch notifications:", err);
+      }
+    };
+    fetchNotifications();
   }, []);
 
   return (
@@ -52,7 +67,9 @@ const ProfileSettings1 = () => {
       >
         <Bell className="mr-2 h-4 w-4" />
         <span>Notifications</span>
-        <Badge variant="destructive" className="ml-auto">5</Badge>
+        <Badge variant={notificationCount > 0 ? "destructive" : "outline"} className="ml-auto">
+          {notificationCount}
+        </Badge>
       </DropdownMenuItem>
     </DropdownMenuGroup>
   );

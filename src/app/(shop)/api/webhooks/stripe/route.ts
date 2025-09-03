@@ -94,8 +94,15 @@ console.log(itemsToCreate,"items to ccrerate")
     payment: true,
   },
 });
-
-
+    
+await prisma.notification.create({
+  data: {
+    userId: user.id,
+    type: "ORDER_PLACED",
+    message: `Your order #${order.id} has been successfully placed.`,
+    link: `/product/${order.items[0].productId}`,
+  },
+});
     console.log("✅ Order saved:", order);
   }
 

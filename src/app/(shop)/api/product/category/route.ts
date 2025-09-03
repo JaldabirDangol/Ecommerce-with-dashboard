@@ -56,7 +56,9 @@ const category = await prisma.productCategory.create({
 
 export async function GET() {
   try {
-    const categories = await prisma.productCategory.findMany();
+    const categories = await prisma.productCategory.findMany({
+      take:16
+    });
     return NextResponse.json(categories);
   } catch (error: any) {
     console.error(error);

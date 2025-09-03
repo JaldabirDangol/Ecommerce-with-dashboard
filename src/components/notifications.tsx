@@ -10,6 +10,7 @@ type Notification = {
   message: string;
   link?: string;
   isRead?: boolean;
+  type?:string
 };
 
 export default function Notifications() {
@@ -40,38 +41,52 @@ export default function Notifications() {
   }, []);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Bell size={18} /> Notifications
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <p className="text-sm text-gray-500">Loading notifications...</p>
-        ) : error ? (
-          <p className="text-sm text-red-500">{error}</p>
-        ) : notifications.length > 0 ? (
-          <ul className="list-disc list-inside text-sm space-y-2">
-            {notifications.map((n) => (
-              <li
-                key={n.id}
-                className={n.isRead ? "text-gray-500" : "text-black font-medium"}
+   <Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <Bell size={18} /> Notifications
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    {isLoading ? (
+      <p className="text-sm text-gray-500">Loading notifications...</p>
+    ) : error ? (
+      <p className="text-sm text-red-500">{error}</p>
+    ) : notifications.length > 0 ? (
+      <ul className="space-y-2">
+        {notifications.map((n) => (
+          <li
+            key={n.id}
+            className={`flex items-center justify-between p-3 rounded-lg border ${
+              n.isRead ? "bg-gray-50 border-gray-200 text-gray-500" : "bg-white border-gray-300 text-black font-medium"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              {/* Icon based on type */}
+              {n.type === "PAYMENT_CONFIRMED" && (
+                <span className="text-green-500 font-bold">💰</span>
+              )}
+              {n.type === "ORDER_PLACED" && (
+                <span className="text-blue-500 font-bold">📦</span>
+              )}
+              <span className="text-sm">{n.message}</span>
+            </div>
+            {n.link && (
+              <a
+                href={n.link}
+                className="text-sm text-blue-500 hover:underline"
               >
-                {n.link ? (
-                  <a href={n.link} className="hover:underline">
-                    {n.message}
-                  </a>
-                ) : (
-                  n.message
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-gray-500">No notifications yet.</p>
-        )}
-      </CardContent>
-    </Card>
+                View
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p className="text-sm text-gray-500">No notifications yet.</p>
+    )}
+  </CardContent>
+</Card>
+
   );
 }
