@@ -9,7 +9,8 @@ import {
 import Image from "next/image";
 import ToggleSwitch from "./toggleSwitchTable";
 import { useEffect, useState } from "react";
-import { Loader2, AlertCircle } from "lucide-react"; 
+import { AlertCircle } from "lucide-react"; 
+import ProductTableSkeleton from "@/app/dashboard/products/loading";
 
 type Product = {
   id: string;
@@ -103,15 +104,10 @@ const ProductTable = () => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        <span className="ml-2 text-gray-500">Loading products...</span>
-      </div>
-    );
+  
+  if(loading){
+    return <ProductTableSkeleton/>
   }
-
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-red-500">
