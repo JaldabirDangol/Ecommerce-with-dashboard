@@ -1,3 +1,4 @@
+"use server"
 import { prisma } from "@/lib/db";
 
 export const DashboardData = async () => {
@@ -27,18 +28,7 @@ export const DashboardData = async () => {
       },
       take: 5,
     });
-  
 
-   const sum =  [{
-        totalOrders,
-        totalCustomers,
-        totalProducts,
-        totalSells,
-      },
-      lowStockProducts,
-      recentActivities,
-   ]
-    console.log(sum ,"sumsm sjdfnisfasdfgasdf")
     return {
       summary: {
         totalOrders,

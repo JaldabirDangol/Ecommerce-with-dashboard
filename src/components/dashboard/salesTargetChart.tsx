@@ -1,6 +1,5 @@
 "use client"
-import React from 'react'; // PureComponent is not necessary unless you have specific perf needs
-import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts'; // Removed Legend from import
+import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts'; 
 
 const data = [
   { name: 'Monthly Target', value: 14500, fill: '#00C49F' },
