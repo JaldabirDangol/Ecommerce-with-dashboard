@@ -44,8 +44,9 @@ const ProductDetailSelector = ({ id, colorOptions, stock, name, description ,pri
                 description,
             });
 
-        } catch (error: any) {
-            toast(error.message || 'Failed to add item to cart');
+        } catch (error) {
+          const err = error as Error;
+            toast(err.message || 'Failed to add item to cart');
         }
     });
 };

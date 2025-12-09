@@ -126,6 +126,7 @@ model Product{
   brand                       String?
   warrenty                    String?
   dimensions                  String?
+  rating                      Float?
   images                      String[]
   colorOptions                String[]
   weight                      String?

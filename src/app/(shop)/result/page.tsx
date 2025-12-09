@@ -54,9 +54,10 @@ export default function ResultPage() {
         }
         const data: SessionDTO = await res.json();
         setSession(data);
-      } catch (e: any) {
-        setError(e.message || "Failed to fetch session.");
-      } finally {
+     } catch (err: unknown) {
+    const error = err instanceof Error ? err : new Error("Failed to fetch session.");
+    setError(error.message);
+  } finally {
         setLoading(false);
       }
     })();

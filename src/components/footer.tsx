@@ -1,5 +1,6 @@
 "use client"
 import { Mail, MapPin, Phone } from 'lucide-react'; 
+import Image from 'next/image';
 import { usePathname } from "next/navigation";
 
 const Footer = () => {
@@ -88,13 +89,31 @@ if (["/dashboard", "/login", "/signup"].includes(pathname)) {
       {/* Bottom Copyright and Payment Methods */}
       <div className="border-t border-gray-300 mt-10 pt-8 text-center text-sm">
         <p>&copy; {new Date().getFullYear()} Hexa Mart. All rights reserved.</p>
-        <div className="flex justify-center items-center gap-4 mt-4">
-          {/* Placeholder for payment method icons */}
-          <img src="https://placehold.co/50x30/D1D5DB/4B5563?text=Visa" alt="Visa" className="h-6 rounded" />
-          <img src="https://placehold.co/50x30/D1D5DB/4B5563?text=Master" alt="Mastercard" className="h-6 rounded" />
-          <img src="https://placehold.co/50x30/D1D5DB/4B5563?text=PayPal" alt="PayPal" className="h-6 rounded" />
-          {/* Add more payment icons as needed */}
-        </div>
+     <div className="flex justify-center items-center gap-4 mt-4">
+  {/* Placeholder for payment method icons */}
+  <Image 
+    src="https://placehold.co/50x30/D1D5DB/4B5563?text=Visa" 
+    alt="Visa" 
+    width={50} 
+    height={30} 
+    className="rounded"
+  />
+  <Image 
+    src="https://placehold.co/50x30/D1D5DB/4B5563?text=Master" 
+    alt="Mastercard" 
+    width={50} 
+    height={30} 
+    className="rounded"
+  />
+  <Image 
+    src="https://placehold.co/50x30/D1D5DB/4B5563?text=PayPal" 
+    alt="PayPal" 
+    width={50} 
+    height={30} 
+    className="rounded"
+  />
+  {/* Add more payment icons as needed */}
+</div>
       </div>
     </footer>
   );

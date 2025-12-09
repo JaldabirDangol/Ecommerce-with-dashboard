@@ -14,7 +14,7 @@ export default function Signup() {
         />
         <div className="absolute bottom-8 left-6 bg-black/50 p-4 rounded">
           <h2 className="text-2xl font-semibold text-white">
-            "Everything you need, in one place"
+          {  "Everything you need, in one place"}
           </h2>
           <p className="mt-2 text-sm text-amber-200">
             From none to sun, we chased the light — from simple dreams to shining

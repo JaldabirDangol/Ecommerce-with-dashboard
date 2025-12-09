@@ -2,8 +2,15 @@ import React from 'react';
 import { StarIcon as StarIconSolid } from '@heroicons/react/20/solid';
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
 import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import { Product } from '@prisma/client';
 
-const KeySpecification = ({ product }: any) => {
+type KeySpecificationProps = {
+  product: Product;
+};
+
+const KeySpecification = ({ product }: KeySpecificationProps) => {
+
+
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
@@ -67,17 +74,14 @@ const KeySpecification = ({ product }: any) => {
           <span>{product.warrenty}</span>
         </div>
 
-        {product.reviewsCount > 0 && (
-          <div className="grid grid-cols-2 gap-x-4">
-            <strong className="font-semibold text-gray-800">Rating:</strong>
-            <div className="flex items-center gap-1">
-              {renderStars(product.averageRating)}
-              <span className="text-xs text-gray-500">
-                ({product.averageRating.toFixed(1)}/5, {product.reviewsCount} reviews)
-              </span>
-            </div>
-          </div>
-        )}
+      <div className="grid grid-cols-2 gap-x-4 mt-2">
+  <strong className="font-semibold text-gray-800">Rating:</strong>
+  <div className="flex items-center gap-1">
+    {renderStars(product.rating || 0)} {/* use the rating number directly */}
+   
+  </div>
+</div>
+
 
         {product.weight && (
           <div className="grid grid-cols-2 gap-x-4">

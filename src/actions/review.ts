@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/app/auth"; // Assuming you have an authentication solution
+import { auth } from "@/app/auth"; 
 
 interface AddReviewProps {
   productId: string;
@@ -44,8 +44,8 @@ export async function addReview({ productId, rating, description }: AddReviewPro
     // Revalidate the product page to show the new review immediately
     revalidatePath(`/product/${productId}`);
     return { success: true };
-  } catch (error: any) {
-    console.error("Failed to add review:", error);
-    throw new Error(error.message || "Failed to add review. Please try again.");
+  } catch (error) {
+    console.error("Failed to add review:", error as Error);
+    throw new Error( "Failed to add review. Please try again.");
   }
 }

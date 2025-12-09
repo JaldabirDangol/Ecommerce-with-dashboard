@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useWishListStore } from "@/store/wishListStore";
 import { useEffect, useState } from "react";
 import { getOrderCount } from "@/actions/order";
+import { Notification } from "@prisma/client";
 
 const ProfileSettings1 = () => {
   const wishlistLength = useWishListStore((state) => state.items.length);
@@ -29,8 +30,8 @@ const ProfileSettings1 = () => {
     const fetchNotifications = async () => {
       try {
         const res = await fetch("/api/notifications"); 
-        const data = await res.json();
-        const unreadCount = data.filter((n: any) => !n.isRead).length;
+        const data:Notification[] = await res.json();
+        const unreadCount = data.filter((n: Notification) => !n.isRead).length;
         setNotificationCount(unreadCount);
       } catch (err) {
         console.error("Failed to fetch notifications:", err);

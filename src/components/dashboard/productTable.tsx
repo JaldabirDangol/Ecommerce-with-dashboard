@@ -87,8 +87,9 @@ const ProductTable = () => {
         
         const returnedData = await res.json();
         setData(returnedData.products); 
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        const error = err as Error;
+        setError(error.message);
         console.error("Fetch error:", err);
       } finally {
         setLoading(false);

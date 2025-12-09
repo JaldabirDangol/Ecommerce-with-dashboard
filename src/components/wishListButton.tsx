@@ -39,7 +39,9 @@ const handleToggleWishlist = async () => {
 
     toast.success(data.message || "Wishlist updated");
   } catch (error) {
-    toast.error("Network error. Please try again.");
+    const err = error as Error;
+    console.error("Wishlist updated",err)
+    toast.error("Wishlist updated");
   }
 };
 

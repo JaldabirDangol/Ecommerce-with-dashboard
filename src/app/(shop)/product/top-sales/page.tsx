@@ -39,7 +39,7 @@ export default async function TopSalesPage() {
                   "https://placehold.co/600x400/f0f0f0/888888?text=Image+Not+Found"
                 }
                 name={product.name}
-                rating={(product as any).rating ?? 0} 
+                rating={product.rating ?? 0} 
                 price={product.price}
                 description={product.description ?? "No description available"}
               />

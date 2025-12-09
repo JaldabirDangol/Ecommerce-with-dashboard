@@ -3,7 +3,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-function generateSlug(name) {
+function generateSlug(name:string) {
   return name
     .toLowerCase()
     .trim()
@@ -48,8 +48,8 @@ const category = await prisma.productCategory.create({
   { status: 200 }
 );
 
-  } catch (error: any) {
-    console.error(error);
+  } catch (error) {
+    console.error(error as Error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
@@ -60,8 +60,8 @@ export async function GET() {
       take:16
     });
     return NextResponse.json(categories);
-  } catch (error: any) {
-    console.error(error);
+  } catch (error) {
+    console.error(error as Error);
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });
   }
 }

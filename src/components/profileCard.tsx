@@ -10,27 +10,58 @@ import { Dialog } from "@/components/ui/dialog";
 import EditProfileForm from "@/components/editProfileForm";
 import { initialUserData } from "@/actions/profile";
 import { useUserStore } from "@/store/userData";
+import { User } from "@prisma/client";
 
+ type initialUserDataType = User & {
+  defaultAddress: {
+    id: string;
+    createdAt: Date;
+    userId: string;
+    street: string | null;
+    city: string | null;
+    postal: string | null;
+    country: string | null;
+    phone: string | null;
+  } | null;
+
+  shippingAddress: {
+    id: string;
+    createdAt: Date;
+    userId: string;
+    street: string | null;
+    city: string | null;
+    postal: string | null;
+    country: string | null;
+    phone: string | null;
+  } | null;
+};
 const ProfileCard = () => {
   const { data: session } = useSession();
   const [editOpen, setEditOpen] = useState<boolean>(false);
-   const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<initialUserDataType | null>(null);
    const updateUserDataStore = useUserStore((state)=>state.updateUserDataStore)
 
- useEffect(() => {
+useEffect(() => {
+  const fetchUserData = async () => {
+    if (session?.user?.id) {
+      const res = await initialUserData();
 
-    const fetchUserData = async () => {
-      if (session?.user?.id) {
-        const res = await initialUserData();
-        setUserData(res); 
-      console.log("Updated userdata:", res);
-      updateUserDataStore(res)
+      if ("error" in res) {
+        console.log("User data error:", res.error);
+        return;
       }
-    };
-    fetchUserData();
-  }, [session, updateUserDataStore]); 
 
-  const user = userData as any;
+      setUserData(res);
+      updateUserDataStore(res);
+      console.log("Updated userdata:", res);
+    }
+  };
+
+  fetchUserData();
+}, [session, updateUserDataStore]);
+
+
+  const user = userData;
 
   return (
     <Card className="rounded-2xl shadow-md">

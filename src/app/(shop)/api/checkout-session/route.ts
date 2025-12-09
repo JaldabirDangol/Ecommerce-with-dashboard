@@ -17,20 +17,25 @@ export async function POST(req: Request) {
       );
     }
 
-    const { items } = await req.json(); //comes from buying when i clieck proceed on order summary
+    const { items } = await req.json();
+
     if (!items || items.length === 0) {
       throw new Error("No items provided");
     }
 
-    console.log(items,":itemss fdromn check session ")
-   
-    //needed for checkout seesion 
-    const line_items = items.map((item: any) => ({
+    type CheckoutItem = {
+      productId: string;
+      productName: string;
+      price: number;
+      quantity: number;
+    };
+
+    const line_items = items.map((item: CheckoutItem) => ({
       price_data: {
         currency: "usd",
         product_data: {
           name: item.productName,
-          metadata: { productId: item.productId },  
+          metadata: { productId: item.productId },
         },
         unit_amount: Math.round(item.price * 100),
       },
@@ -39,7 +44,7 @@ export async function POST(req: Request) {
 
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items,  //above products being purchased which can be fetch in webhooks for creating order 
+      line_items,
       mode: "payment",
       customer_email: session.user.email,
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/result?session_id={CHECKOUT_SESSION_ID}`,
@@ -47,8 +52,12 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ id: checkoutSession.id });
-  } catch (err: any) {
-    console.error("Stripe checkout error:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const error = err instanceof Error ? err : new Error("Unknown error");
+    console.error("Stripe checkout error:", error);
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
 }

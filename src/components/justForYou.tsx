@@ -21,7 +21,7 @@ const JustForYou =async () => {
           id={product.id}
           imageUrl={product.images[0]}
           name={product.name}
-          rating={(product as any).rating ?? 0} 
+          rating={product.rating ?? 0} 
           price={product.price}
           description={product.description ?? "No description available"}
 

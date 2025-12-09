@@ -40,7 +40,8 @@ const ReviewForm = ({ productId }: ReviewFormProps) => {
       setRating(0);
       setDescription("");
       router.refresh(); // Refresh the page to show the new review
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as Error;
       setError(err.message || "Failed to submit review. Please try again.");
     } finally {
       setIsSubmitting(false);

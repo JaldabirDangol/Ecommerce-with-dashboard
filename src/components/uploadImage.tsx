@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import {  useState } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -11,17 +11,19 @@ export default function ImageUpload() {
   const [localImages, setLocalImages] = useState<string[]>(() => getValues("images") || []);
 
 
-  const handleUploadSuccess = (result: any) => {
+ const handleUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
+  if (result.event === "success" && result.info && typeof result.info !== "string") {
     const newUrl = result.info.secure_url;
 
     setLocalImages((prev) => {
-    const updated = [...prev, newUrl];
-    setValue("images", updated, { shouldValidate: true }); // ✅ use updated
-    return updated;
-  });
+      const updated = [...prev, newUrl];
+      setValue("images", updated, { shouldValidate: true });
+      console.log("updated local images", updated);
+      return updated;
+    });
+  }
+};
 
-    console.log("local images ",localImages)
-  };
 
   const removeImage = (index: number) => {
     const updatedImages = localImages.filter((_, i) => i !== index);

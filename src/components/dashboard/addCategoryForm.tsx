@@ -1,16 +1,18 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import Image from "next/image";
 import { toast } from "sonner";
+
 
 export default function UploadForm() {
   const [isPending, startTransition] = useTransition();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const handleUploadSuccess = (result: any) => {
-    if (result?.info?.secure_url) {
+  const handleUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
+
+   if (result.event === "success" && result.info && typeof result.info !== "string") {
       setImageUrl(result.info.secure_url);
     }
   };
@@ -46,10 +48,14 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         setImageUrl(null);
         formElement.reset(); 
       }
-    } catch (error: any) {
-      console.error("Submission error:", error.message);
-      toast.error(error.message || "Submission failed");
-    }
+} catch (err: unknown) {
+  // Narrow unknown to Error
+  const error = err instanceof Error ? err : new Error("Submission failed");
+
+  console.error("Submission error:", error);
+  toast.error(error.message);
+}
+
   });
 };
 

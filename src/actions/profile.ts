@@ -96,8 +96,8 @@ return {
   userData: updatedUser as unknown as ProfileFormData,
 };
 
-  } catch (error: any) {
-    console.error("Failed to update profile:", error);
+  } catch (error) {
+    console.error("Failed to update profile:", error as Error);
     return { error: "Failed to update profile. Please try again." };
   }
 };
