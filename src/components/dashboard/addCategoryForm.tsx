@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import Image from "next/image";
 import { toast } from "sonner";
+export const dynamic = "force-dynamic";
+
 
 
 export default function UploadForm() {

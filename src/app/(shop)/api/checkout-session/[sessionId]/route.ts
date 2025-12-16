@@ -61,19 +61,27 @@ await prisma.notification.create({
       amount_total: session.amount_total,    
       currency: session.currency,
       customer_email: session.customer_details?.email ?? null,
-      line_items: lineItems.data.map((li) => ({
-        id: li.id,
-        name:
-          typeof li.price?.product === "object" && li.price?.product
-            ? (li.price.product as any).name
-            : li.description ?? "Item",
-        quantity: li.quantity,
-        amount_total: li.amount_total,     
-        amount_subtotal: li.amount_subtotal,
-      })),
+      line_items: lineItems.data.map((li) => {
+  const product = li.price?.product;
+
+  const name =
+    product && typeof product === "object" && "name" in product
+      ? product.name
+      : li.description ?? "Item";
+
+  return {
+    id: li.id,
+    name,
+    quantity: li.quantity,
+    amount_total: li.amount_total,
+    amount_subtotal: li.amount_subtotal,
+  };
+}),
+
       receipt_url: receiptUrl,
     });
-  } catch (err: any) {
+  } catch (error) {
+    const err = error as Error;
     console.error("GET /api/checkout-session/:id failed:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

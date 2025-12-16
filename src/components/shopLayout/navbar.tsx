@@ -7,6 +7,7 @@ import ProfileSection from "@/components/profileSection"
 import { NavMenu } from "@/components/navItems";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -33,7 +34,9 @@ if (
           />
         </Link>
         <div className="flex-1 max-w-xl">
+          <Suspense fallback={<p>Loading Searchbar...</p>}>
           <SearchBar />
+    </Suspense>
         </div>
       </div>
 

@@ -1,6 +1,8 @@
+import { Address } from "@prisma/client";
+
 export interface ProfileFormData {
   id?: string;
-  email: string;
+  email: string | null;
   name: string;
   username: string | null;
   phoneNumber: string | null;
@@ -10,18 +12,6 @@ export interface ProfileFormData {
   shippingAddressId?: string | null;
   createdAt?: string;
   updatedAt?: string;
-  defaultAddress: {
-    street?: string;
-    city?: string;
-    postal?: string;
-    country?: string;
-    phone?: string;
-  } | null;
-  shippingAddress: {
-    street?: string;
-    city?: string;
-    postal?: string;
-    country?: string;
-    phone?: string;
-  } | null;
+  defaultAddress: Address | null
+  shippingAddress:Address | null
 }

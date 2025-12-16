@@ -21,10 +21,7 @@ export const SalesTargetChart = () => (
             endAngle={-270}
         >
             <RadialBar
-                minAngle={15}
-              
-                background
-                clockWise
+        label={{ position: 'insideStart', fill: '#fff' }}
                 dataKey="value"
             />
         

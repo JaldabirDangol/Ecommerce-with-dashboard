@@ -32,8 +32,6 @@ const CheckoutPage = () => {
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Placing order with the following details:", formData);
-    // Here you would typically send this data to your backend API to process the order
-    // and then navigate the user to a confirmation page.
     alert("Order placed successfully! (This is a mock action)");
   };
 

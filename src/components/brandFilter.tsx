@@ -1,8 +1,14 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import {Collapse} from "react-collapse"
+import { brandType } from "./productFilter";
 
-const BrandFilter = ({ brands }: { brands: { brand: string }[] }) => {
+
+type BrandFilterProps = {
+  brands: brandType[];
+};
+
+const BrandFilter =   ({ brands }:BrandFilterProps) => {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [brandCollapse, setBrandCollapse]  = useState(false)
 

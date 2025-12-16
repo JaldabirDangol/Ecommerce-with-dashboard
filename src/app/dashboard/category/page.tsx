@@ -10,7 +10,10 @@ export default function NewCategoryPage() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch("/api/product/category");
+               const res = await fetch("http://localhost:3000/api/product/category", {
+  next: { revalidate: 120 }, 
+});
+
                 
                 if (!res.ok) {
                     throw new Error("Failed to fetch categories");

@@ -4,7 +4,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DollarSignIcon, ShoppingCartIcon, TrendingUpIcon, FileTextIcon, MoreHorizontalIcon, PlusCircleIcon } from 'lucide-react';
-import { latestOrderItem } from '@/actions/order'; // import your backend function
+import { latestOrderItem } from '@/actions/order'; 
+export const dynamic = "force-dynamic";
 
 
 const DashboardSalesPage = async () => {

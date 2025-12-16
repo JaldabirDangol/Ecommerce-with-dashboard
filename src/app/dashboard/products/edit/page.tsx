@@ -63,7 +63,9 @@ export default function Page() {
         return;
       }
       try {
-        const categoryRes = await fetch("/api/product/category");
+        const categoryRes =  await fetch("http://localhost:3000/api/product/category", {
+  next: { revalidate: 120 }, 
+});
         if (!categoryRes.ok) throw new Error("Failed to fetch categories");
         const categoryData = await categoryRes.json();
         setCategories(categoryData);

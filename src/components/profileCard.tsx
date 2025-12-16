@@ -8,92 +8,69 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import EditProfileForm from "@/components/editProfileForm";
-import { initialUserData } from "@/actions/profile";
+import { initialUserData, SuccessUserData } from "@/actions/profile";
 import { useUserStore } from "@/store/userData";
-import { User } from "@prisma/client";
 
- type initialUserDataType = User & {
-  defaultAddress: {
-    id: string;
-    createdAt: Date;
-    userId: string;
-    street: string | null;
-    city: string | null;
-    postal: string | null;
-    country: string | null;
-    phone: string | null;
-  } | null;
+const getField = (value?: string | null, fallback = "N/A") => value ?? fallback;
 
-  shippingAddress: {
-    id: string;
-    createdAt: Date;
-    userId: string;
-    street: string | null;
-    city: string | null;
-    postal: string | null;
-    country: string | null;
-    phone: string | null;
-  } | null;
-};
 const ProfileCard = () => {
   const { data: session } = useSession();
   const [editOpen, setEditOpen] = useState<boolean>(false);
-  const [userData, setUserData] = useState<initialUserDataType | null>(null);
-   const updateUserDataStore = useUserStore((state)=>state.updateUserDataStore)
+  const [userData, setUserData] = useState<SuccessUserData | null>(null);
 
-useEffect(() => {
-  const fetchUserData = async () => {
-    if (session?.user?.id) {
+  const updateUserDataStore = useUserStore((state) => state.updateUserDataStore);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!session?.user?.id) return;
+
       const res = await initialUserData();
 
-      if ("error" in res) {
-        console.log("User data error:", res.error);
+      if ("status" in res && res.status === "error") {
+        console.error("User data error:", res.error);
         return;
       }
+ const userSuccess = res as SuccessUserData;
 
-      setUserData(res);
-      updateUserDataStore(res);
-      console.log("Updated userdata:", res);
-    }
-  };
+      setUserData(userSuccess);
+      updateUserDataStore(userSuccess);
+    };
 
-  fetchUserData();
-}, [session, updateUserDataStore]);
+    fetchUserData();
+  }, [session, updateUserDataStore]);
 
-
-  const user = userData;
+  const defaultAddress = userData?.defaultAddress;
+  const shippingAddress = userData?.shippingAddress;
 
   return (
     <Card className="rounded-2xl shadow-md">
       <CardHeader className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Avatar className="w-16 h-16">
-            <AvatarImage
-              src={user?.image ?? ""}
-              alt={user?.name ?? "User"}
-            />
+            <AvatarImage src={userData?.image ?? ""} alt={userData?.name ?? "User"} />
             <AvatarFallback className="bg-blue-100 text-blue-600 text-lg">
-              {user?.name?.charAt(0)}
+              {userData?.name?.charAt(0) ?? "U"}
             </AvatarFallback>
           </Avatar>
 
           <div>
-            <CardTitle className="text-xl">{user?.name}</CardTitle>
-            <p className="text-gray-500">{user?.defaultAddress?.city || "Kathmandu"}, {user?.defaultAddress?.country || "Nepal"}</p>
+            <CardTitle className="text-xl">{userData?.name ?? "Guest User"}</CardTitle>
+            <p className="text-gray-500">
+              {getField(defaultAddress?.city, "Kathmandu")},{" "}
+              {getField(defaultAddress?.country, "Nepal")}
+            </p>
           </div>
         </div>
 
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <Button
             variant="outline"
-            onClick={() => setEditOpen(!editOpen)}
+            onClick={() => setEditOpen(true)}
             className="flex items-center gap-2"
           >
             <Pencil size={16} /> Edit
           </Button>
-          <EditProfileForm 
-            setEditOpen={setEditOpen}
-          />
+          <EditProfileForm setEditOpen={setEditOpen} />
         </Dialog>
       </CardHeader>
 
@@ -101,24 +78,24 @@ useEffect(() => {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-gray-500">Full Name</p>
-            <p>{user?.name || "Guest User"}</p>
+            <p>{userData?.name ?? "Guest User"}</p>
           </div>
           <div>
             <p className="text-gray-500">Email</p>
-            <p>{user?.email || "example@email.com"}</p>
+            <p>{userData?.email ?? "example@email.com"}</p>
           </div>
           <div>
             <p className="text-gray-500">Phone</p>
-            <p>{user?.defaultAddress?.phone || "+977 9800000000"}</p>
+            <p>{getField(defaultAddress?.phone, "+977 9800000000")}</p>
           </div>
           <div>
             <p className="text-gray-500">Default Address</p>
             <p>
-              {user?.defaultAddress?.street || "No street provided"}
+              {getField(defaultAddress?.street, "No street provided")} <br />
+              {getField(defaultAddress?.city, "No city")},{" "}
+              {getField(defaultAddress?.postal, "No postal code")}
               <br />
-              {user?.defaultAddress?.city || "No city provided"}, {user?.defaultAddress?.postal || "No postal code"}
-              <br />
-              {user?.defaultAddress?.country || "No country provided"}
+              {getField(defaultAddress?.country, "No country")}
             </p>
           </div>
         </div>
@@ -128,11 +105,12 @@ useEffect(() => {
         <div>
           <h3 className="font-semibold mb-2">Shipping Address</h3>
           <p>
-            {user?.shippingAddress?.street || "No street provided"}
+            {getField(shippingAddress?.street, "No street provided")}
             <br />
-            {user?.shippingAddress?.city || "No city provided"}, {user?.shippingAddress?.postal || "No postal code"}
+            {getField(shippingAddress?.city, "No city")},{" "}
+            {getField(shippingAddress?.postal, "No postal code")}
             <br />
-            {user?.shippingAddress?.country || "No country provided"}
+            {getField(shippingAddress?.country, "No country")}
           </p>
         </div>
       </CardContent>

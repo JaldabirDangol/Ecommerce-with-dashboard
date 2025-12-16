@@ -1,24 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link';
-
-async function getCategories() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product/category`, {
-      cache: "no-store"
-    });
-    if (!res.ok) throw new Error("Failed to fetch categories");
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return [];
-  }
-}
-
+import { ProductCategory } from '@prisma/client';
+import { prisma } from '@/lib/db';
 
 
 export default async function Categories() {
-   const categoriesItem = await getCategories();
+   const categoriesItem:ProductCategory[] = await prisma.productCategory.findMany();
 
    console.log(categoriesItem)
   return (

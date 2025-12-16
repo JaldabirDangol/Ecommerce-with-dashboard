@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ProfileFormData } from "@/types/profileFormData";
+import { SuccessUserData } from "@/actions/profile";
 
 interface UserDataState {
-  user: ProfileFormData | null;
-  updateUserDataStore: (newUserData: Partial<ProfileFormData>) => void;
+  user: SuccessUserData | null;
+  updateUserDataStore: (newUserData: Partial<SuccessUserData>) => void;
   clearUserData: () => void;
 }
 
@@ -18,7 +18,7 @@ export const useUserStore = create<UserDataState>()(
           user: {
             ...(state.user ?? {}), 
             ...newUserData,
-          } as ProfileFormData,
+          } as SuccessUserData,
         }));
       },
 

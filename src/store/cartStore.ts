@@ -38,9 +38,7 @@ export const useCartStore = create<CartState>()(
             items: state.items.filter((item) => item.productId !== productId),
           })),
 
-        clearCart: () => set(() => ({
-          items: []
-        })),
+        clearCart: () => set(() => ({ items: [] })),
 
         toggleSelected: (productId: string) =>
           set((state) => ({
@@ -54,12 +52,13 @@ export const useCartStore = create<CartState>()(
         isItemSelected: (id: string) => {
           return get().items.some((item) => item.productId === id && item.isSelected);
         },
-        
+
         setItems: (newItems: CartItem[]) => set({ items: newItems }),
       }),
-      {
-        name: "cart-storage",
-      }
-    )
+      { name: "cart-devtools" }
+    ),
+    {
+      name: "cart-storage", // <-- persist options
+    }
   )
 );

@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+
+
 import { getCustomerListForAdmin } from '@/actions/order';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,8 +17,6 @@ interface Customer {
   lastOrder: string | null;
   totalOrders: number;
 }
-
-
 
 
 const DashboardCustomersPage = async () => {

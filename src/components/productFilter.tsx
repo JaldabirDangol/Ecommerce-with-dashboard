@@ -2,13 +2,21 @@ import BrandFilter from "@/components/brandFilter"
 import { prisma } from "@/lib/db"
 import CategoryFilter from "./categoryFilter";
 
+
+export type brandType = {
+  brand:string 
+}
+
 const BrandFetcher = async () => {
   const brands = await prisma.product.findMany({
-    distinct: ["brand"],
-    select: {
-      brand: true,       
-    },
-  });
+  distinct: ["brand"],
+  where: { brand: { not: null } },
+  select: { brand: true },
+}) as brandType[]; // assert type
+
+
+
+  console.log(brands , "brands superrrrrrrrrrrr")
   return brands;
 };
 
