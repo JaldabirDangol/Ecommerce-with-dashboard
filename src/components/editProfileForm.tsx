@@ -34,11 +34,11 @@ const EditProfileForm = ({ setEditOpen }: EditProfileFormProps) => {
 
   const [formData, setFormData] = useState<SuccessUserData>({
     ...user,
-    defaultAddress: user.defaultAddress
-      ? { ...user.defaultAddress }
+    defaultAddress: user?.defaultAddress
+      ? { ...user?.defaultAddress }
       : {
           id: "",
-          userId: user.id,
+          userId: user?.id,
           street: "",
           city: "",
           postal: "",
@@ -46,11 +46,11 @@ const EditProfileForm = ({ setEditOpen }: EditProfileFormProps) => {
           phone: "",
           createdAt: new Date(),
         },
-    shippingAddress: user.shippingAddress
-      ? { ...user.shippingAddress }
+    shippingAddress: user?.shippingAddress
+      ? { ...user?.shippingAddress }
       : {
           id: "",
-          userId: user.id,
+          userId: user?.id,
           street: "",
           city: "",
           postal: "",

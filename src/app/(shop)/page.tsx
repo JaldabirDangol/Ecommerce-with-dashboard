@@ -11,11 +11,9 @@ export default async function ShopPage() {
       id:"cmf1k7lcs000kh1ggxmroo74o"
     }
   })
-    const product2 = await prisma.product.findUnique({
-    where:{
-      id:"cmdu32n280001h1xoeec7457c"
-    }
-  })
+
+
+
   return (
     <div className="flex flex-col w-full mt-4 gap-4">
       <h2 className="text-2xl font-semibold">Welcome to the Shop!</h2>
@@ -30,8 +28,9 @@ export default async function ShopPage() {
       <div className="flex flex-col gap-2 w-full">
   <ProductFeatureCard
         title="New Gen X-Bud"
+          subtitle="Crystal clarity for pro creators"
         imageUrl="/earbud.jpg"
-        href={`/product/${product2?.id}`}
+       href={`/product/${product1?.id}`}
       />
 <ProductFeatureCard
   title="UltraSharp 6K Monitor"
