@@ -18,7 +18,6 @@ export default function ImageUpload() {
     setLocalImages((prev) => {
       const updated = [...prev, newUrl];
       setValue("images", updated, { shouldValidate: true });
-      console.log("updated local images", updated);
       return updated;
     });
   }

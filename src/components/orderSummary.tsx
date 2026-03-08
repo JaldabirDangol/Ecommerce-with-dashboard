@@ -57,18 +57,33 @@ const OrderSummary = () => {
   const handleKhaltiCheckout = async () => {
     setLoading(true);
     try {
+      // Save selected items to localStorage so we can create the order after redirect
+      localStorage.setItem(
+        "khalti_pending_items",
+        JSON.stringify(
+          selectedItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            priceAtPurchase: item.price,
+          }))
+        )
+      );
+      localStorage.setItem("khalti_pending_total", String(total));
+
+      const amountInPaisa = Math.round(total * 100);
+      if (amountInPaisa < 1000) {
+        alert("Minimum amount for Khalti payment is Rs. 10");
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch("/api/khalti/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: total * 100, // paisa
+          amount: amountInPaisa,
           purchaseOrderId: "ORDER_" + Date.now(),
           purchaseOrderName: "E-commerce Order",
-          customer: {
-            name: "Test User",
-            email: "test@example.com",
-            phone: "9800000001",
-          },
         }),
       });
 
@@ -80,7 +95,7 @@ const OrderSummary = () => {
         return;
       }
 
-      // 🔥 Redirect to Khalti hosted checkout
+      // Redirect to Khalti hosted checkout
       window.location.href = data.payment_url;
     } catch (err) {
       console.error("Khalti error:", err);

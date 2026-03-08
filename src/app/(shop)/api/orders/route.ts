@@ -1,5 +1,3 @@
-"use server";
-
 import { auth } from "@/app/auth";
 import { prisma } from "@/lib/db";
 
@@ -16,7 +14,6 @@ export const GET = async () => {
       orderBy: { createdAt: "desc" },
     });
    
-    console.log("ordersssss",orders)
     return new Response(JSON.stringify({ orders }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

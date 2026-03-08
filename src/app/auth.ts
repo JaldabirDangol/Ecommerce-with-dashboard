@@ -34,7 +34,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const password = credentials?.password as string | undefined;
 
         if (!email || !password) {
-          console.log("Missing email or password");
           return null;
         }
          
@@ -43,14 +42,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
        
         if(!user){
-          console.log("User not found:", email);
           return null;
         }
       
         const isPasswordValid = await bcrypt.compare(password,user.password || "");
 
         if(!isPasswordValid){
-          console.log("Invalid password for user:", email);
           return null;
         }
 

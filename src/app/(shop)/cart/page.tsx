@@ -22,7 +22,6 @@ const cartFetcher = async () => {
 
 const cartPage = async () => {
   const cartItems = await cartFetcher();
-  console.log("cartpage", cartItems);
 
   return (
     <div className="w-full h-full pt-2 flex justify-center gap-2">

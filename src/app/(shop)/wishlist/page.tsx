@@ -13,7 +13,6 @@ import { toast } from "sonner";
 const WishlistPage = () => {
   const { items, removeFromWishList, fetchAndSetWishlist } = useWishListStore();
 
-  console.log(items,"fagsagfsdf")
   const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {

@@ -95,8 +95,6 @@ export const GET = async () => {
       },
     });
 
-    console.log("called",wishlist?.items)
-
     return NextResponse.json(wishlist?.items || []);
   } catch (error) {
     console.error("Failed to fetch wishlist:", error);

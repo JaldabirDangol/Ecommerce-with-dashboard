@@ -64,8 +64,6 @@ if (!parsedData.success) {
 
     const productData = parsedData.data;
 
-    console.log(productData.images)
-
     await prisma.product.create({
       data: {
         name: productData.name,
@@ -162,7 +160,6 @@ export const updateProductDetails = async (
       },
     });
 
-    console.log("Product updated:", updatedProduct);
     return { success: true, error: undefined, message: "Product updated successfully!" };
   } catch (error) {
     console.error("Error updating product:", error);

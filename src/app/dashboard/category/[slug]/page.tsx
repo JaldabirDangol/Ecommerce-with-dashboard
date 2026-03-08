@@ -21,7 +21,6 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleDelete = () => {
-    console.log(`Deleting product: ${product.name}`);
     setIsDropdownOpen(false);
   };
 

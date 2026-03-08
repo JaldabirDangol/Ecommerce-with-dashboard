@@ -90,8 +90,6 @@ export const updateUserData = async (
       },
     });
 
-    console.log(updatedUser, "updated user in backend");
-
     revalidatePath("/profile");
 
     return {

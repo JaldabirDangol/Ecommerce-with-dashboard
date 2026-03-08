@@ -15,8 +15,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
     where: { id: resolvedParams.id },
   });
 
-  console.log("product page ", product);
- if (!product) {
+  if (!product) {
     notFound();
   }
 

@@ -35,7 +35,6 @@ export async function GET() {
       earn: monthlyEarnings.get(month) || 0,
     }));
    
-    console.log(chartData,"charrtagasdfgasbdgfkjasdbfkg")
     return NextResponse.json({ data: chartData });
   } catch (err) {
     console.error(err);

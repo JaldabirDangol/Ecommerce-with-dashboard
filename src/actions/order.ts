@@ -89,7 +89,6 @@ export const latestOrderItem = async () => {
       amount: order.total,
     }));
 
-    console.log(sales, "Transformed sales");
     return sales;
   } catch (error) {
     console.error(error);

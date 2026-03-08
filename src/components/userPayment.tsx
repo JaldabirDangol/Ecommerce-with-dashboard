@@ -30,7 +30,6 @@ export default function BillingSection({ activeTab }: { activeTab: string }) {
   };
 
   const handleAddPayment = () => {
-    console.log('Add new payment method clicked.');
     // TODO: open modal or navigate to add payment page
   };
 

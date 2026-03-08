@@ -40,7 +40,7 @@ export const DashboardData = async () => {
       recentActivities,
     };
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch dashboard data:", error);
     throw new Error("Failed to fetch dashboard data");
   }
 };

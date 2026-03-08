@@ -31,7 +31,7 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
         toast(res.message);
         removeFromCart(item.productId);
       } catch (error) {
-        console.log(error);
+        console.error("Failed to delete cart item:", error);
       }
     });
   };
@@ -111,7 +111,6 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
               const newQuantity = parseInt(e.target.value);
               if (!isNaN(newQuantity) && newQuantity >= 1) {
                 // updateQuantity(item.productId, newQuantity);
-                console.log("a")
               }
             }}
             min="1"

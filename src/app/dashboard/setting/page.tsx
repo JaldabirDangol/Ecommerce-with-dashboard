@@ -47,7 +47,6 @@ const DashboardSettingsPage: React.FC = () => {
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Saving settings:', settings);
     // Here you would typically call a server action or API route to save the data
     toast.success('Settings saved successfully!');
   };

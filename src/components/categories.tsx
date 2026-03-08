@@ -8,7 +8,6 @@ import { prisma } from '@/lib/db';
 export default async function Categories() {
    const categoriesItem:ProductCategory[] = await prisma.productCategory.findMany();
 
-   console.log(categoriesItem)
   return (
     <div className='w-ful h-full'>
 

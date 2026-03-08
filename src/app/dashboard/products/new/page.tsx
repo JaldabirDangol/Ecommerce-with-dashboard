@@ -74,7 +74,7 @@ export default function Page() {
         const data = await res.json();
         setCategories(data);
       } catch(err) {
-        console.log(err)
+        console.error("Failed to fetch categories:", err);
       }
     };
     fetchCategories();

@@ -1,5 +1,3 @@
-"use server"
-
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
@@ -9,8 +7,6 @@ export async function GET(
 ) {
     try {
         const { slug } = await params;
-
-        console.log("got req in backend")
 
         if (!slug) {
             return NextResponse.json(

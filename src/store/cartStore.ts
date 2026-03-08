@@ -2,6 +2,18 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { CartItem } from "@/types/product";
 
+interface CartItemBackend {
+  id: string;
+  quantity: number;
+  product: {
+    id: string;
+    name: string;
+    description: string | null;
+    price: number;
+    images: string[];
+  };
+}
+
 interface CartState {
   items: CartItem[];
   addToCart: (item: CartItem) => void;
@@ -10,6 +22,7 @@ interface CartState {
   toggleSelected: (productId: string) => void;
   isItemSelected: (id: string) => boolean;
   setItems: (newItems: CartItem[]) => void;
+  fetchAndSetCart: () => Promise<void>;
 }
 
 export const useCartStore = create<CartState>()(
@@ -54,6 +67,27 @@ export const useCartStore = create<CartState>()(
         },
 
         setItems: (newItems: CartItem[]) => set({ items: newItems }),
+
+        fetchAndSetCart: async () => {
+          try {
+            const res = await fetch("/api/cart");
+            if (!res.ok) return;
+            const backendItems: CartItemBackend[] = await res.json();
+            if (!Array.isArray(backendItems)) return;
+            const transformed = backendItems.map((item) => ({
+              productId: item.product.id,
+              productName: item.product.name,
+              price: item.product.price,
+              quantity: item.quantity,
+              isSelected: true,
+              description: item.product.description,
+              image: item.product.images?.[0],
+            }));
+            set({ items: transformed });
+          } catch (error) {
+            console.error("Failed to fetch cart:", error);
+          }
+        },
       }),
       { name: "cart-devtools" }
     ),

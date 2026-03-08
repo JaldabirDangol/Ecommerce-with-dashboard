@@ -31,7 +31,6 @@ const CheckoutPage = () => {
 
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Placing order with the following details:", formData);
     alert("Order placed successfully! (This is a mock action)");
   };
 

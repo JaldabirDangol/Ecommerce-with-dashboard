@@ -16,7 +16,6 @@ const BrandFetcher = async () => {
 
 
 
-  console.log(brands , "brands superrrrrrrrrrrr")
   return brands;
 };
 

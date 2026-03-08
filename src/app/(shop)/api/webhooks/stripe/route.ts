@@ -30,9 +30,6 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-
-    console.log(session,"session from webhook")
-
     if (!session.customer_email) {
       console.warn("❌ No customer email, skipping order creation.");
       return new NextResponse("No customer email", { status: 400 });
@@ -51,7 +48,6 @@ export async function POST(req: Request) {
       expand: ["data.price.product"],
     });
    
-     console.log(lineItems.data[0].price,"session  price from webhook")
     const total = (session.amount_total ?? 0) / 100;
 
    const itemsToCreate = lineItems.data
@@ -59,7 +55,6 @@ export async function POST(req: Request) {
     const product = item.price?.product as Stripe.Product;
     const productId = product.metadata?.productId;
 
-    console.log(item.price,"item pricasdfasdfasdfasdf")
     if (!productId) {
       console.warn(" product with missing priductID:", product?.name);
       return null;
@@ -73,7 +68,6 @@ export async function POST(req: Request) {
   })
   .filter((item): item is { productId: string; quantity: number; priceAtPurchase: number } => Boolean(item));
 
-console.log(itemsToCreate,"items to ccrerate")
    const order = await prisma.order.create({
   data: {
     userId: user.id,
@@ -86,6 +80,7 @@ console.log(itemsToCreate,"items to ccrerate")
         method: "STRIPE",
         status: session.payment_status || "PAID",
         amount: total,
+        userId: user.id,
       },
     },
   },
@@ -103,7 +98,6 @@ await prisma.notification.create({
     link: `/product/${order.items[0].productId}`,
   },
 });
-    console.log("✅ Order saved:", order);
   }
 
   return NextResponse.json({ received: true });

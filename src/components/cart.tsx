@@ -2,13 +2,18 @@
 
 import { useCartStore } from "@/store/cartStore";
 import Link from "next/link";
+import { useEffect } from "react";
 import { CiShoppingCart } from "react-icons/ci";
 
 export const Cart = () => {
   const cartCount = useCartStore((state) =>
-  state.items.reduce((acc, item) => acc + item.quantity, 0)
-);
+    state.items.reduce((acc, item) => acc + item.quantity, 0)
+  );
+  const fetchAndSetCart = useCartStore((state) => state.fetchAndSetCart);
 
+  useEffect(() => {
+    fetchAndSetCart();
+  }, [fetchAndSetCart]);
 
   return (
     <Link href={"/cart"} className="rounded-full bg-white flex relative ">
