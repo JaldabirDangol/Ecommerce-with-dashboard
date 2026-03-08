@@ -1,10 +1,9 @@
 import { CartItem } from "@/components/cartItem";
-import { Trash } from "lucide-react";
-import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { prisma } from "@/lib/db";
 import { auth } from "@/app/auth";
 import OrderSummary from "@/components/orderSummary";
 import { CartInitializer } from "@/components/cartInitializer";
+import CartActions from "@/components/client/cartActions";
 
 const cartFetcher = async () => {
   const session = await auth();
@@ -28,16 +27,7 @@ const cartPage = async () => {
       <CartInitializer initialItems={cartItems} />
 
       <div className="w-[65%] flex flex-col gap-4">
-        <div className="bg-white flex justify-between w-full mt-2 p-4 rounded-2xl items-center">
-          <div className="flex gap-4 items-center">
-            <MdOutlineCheckBoxOutlineBlank className="w-6 h-6" />
-            <p>SELECT ALL ITEMS</p>
-          </div>
-          <div className="flex gap-2 items-center text-red-600 cursor-pointer">
-            <Trash />
-            <span className="font-semibold text-xl">Delete</span>
-          </div>
-        </div>
+        <CartActions />
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
            <CartItem key={item.id} cartItemId={item.id} productId={item.product.id} />

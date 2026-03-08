@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteCartItem } from "@/actions/cart";
+import { deleteCartItem, updateCartItem } from "@/actions/cart";
 import { useCartStore } from "@/store/cartStore";
 import { Heart, Trash } from "lucide-react";
 import Image from "next/image";
@@ -15,7 +15,7 @@ interface CartItemProps {
 }
 
 export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
-  const { items, toggleSelected, removeFromCart } = useCartStore();
+  const { items, toggleSelected, removeFromCart, updateQuantity } = useCartStore();
   const [isPending, startTransition] = useTransition();
 
   const item = items.find((i) => i.productId === productId);
@@ -36,9 +36,19 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
     });
   };
 
-  // const handleQuantityChange = (delta: number) => {
-  //   updateQuantity(item.productId, item.quantity + delta);
-  // };
+  const handleQuantityChange = (delta: number) => {
+    const newQty = item.quantity + delta;
+    if (newQty < 1) return;
+    updateQuantity(item.productId, newQty);
+    startTransition(async () => {
+      try {
+        await updateCartItem({ productId: item.productId, quantity: newQty });
+      } catch {
+        // Revert on failure
+        updateQuantity(item.productId, item.quantity);
+      }
+    });
+  };
   
   return (
     <div className="flex w-full items-center gap-4 bg-main-200 p-4 rounded-2xl">
@@ -54,7 +64,7 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
         />
       )}
 
-      <div className="h-16">
+      <div className="h-16 overflow-hidden">
         <Image
           src={item?.image ?? "/public/earbud.jpg"}
           height={100}
@@ -73,7 +83,7 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
       </div>
 
       <div className="flex flex-col gap-2">
-        <h2>{item.price}</h2>
+        <h2 className="font-semibold text-gray-800">Rs. {item.price}</h2>
         <div className="flex gap-2">
           <button className="p-2 rounded-full border hover:bg-red-100 transition" title="Add to Wishlist">
             <Heart className="w-5 h-5 text-red-500" />
@@ -97,8 +107,8 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Quantity</h2>
         <div className="flex items-center gap-3">
           <button
-            // onClick={() => handleQuantityChange(-1)}
-            disabled={item.quantity <= 1}
+            onClick={() => handleQuantityChange(-1)}
+            disabled={item.quantity <= 1 || isPending}
             className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Decrease quantity"
           >
@@ -110,7 +120,14 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
             onChange={(e) => {
               const newQuantity = parseInt(e.target.value);
               if (!isNaN(newQuantity) && newQuantity >= 1) {
-                // updateQuantity(item.productId, newQuantity);
+                updateQuantity(item.productId, newQuantity);
+                startTransition(async () => {
+                  try {
+                    await updateCartItem({ productId: item.productId, quantity: newQuantity });
+                  } catch {
+                    updateQuantity(item.productId, item.quantity);
+                  }
+                });
               }
             }}
             min="1"
@@ -118,7 +135,8 @@ export const CartItem = ({ productId ,cartItemId}: CartItemProps) => {
             aria-label="Product quantity"
           />
           <button
-            // onClick={() => handleQuantityChange(1)}
+            onClick={() => handleQuantityChange(1)}
+            disabled={isPending}
             className="bg-gray-200 text-gray-800 text-xl font-bold w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Increase quantity"
           >

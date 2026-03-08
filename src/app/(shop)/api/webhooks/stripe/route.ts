@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-08-27.basil", // use stable API
@@ -50,13 +51,29 @@ export async function POST(req: Request) {
    
     const total = (session.amount_total ?? 0) / 100;
 
+    // Use payment_intent as unique dedup key (same key used in result page route)
+    const paymentRef =
+      typeof session.payment_intent === "string"
+        ? session.payment_intent
+        : session.id;
+
+    // Skip if order was already created (by the result page route)
+    const existingPayment = await prisma.payment.findFirst({
+      where: {
+        method: "STRIPE",
+        userId: user.id,
+        status: paymentRef,
+      },
+    });
+
+    if (!existingPayment) {
    const itemsToCreate = lineItems.data
   .map(item => {
     const product = item.price?.product as Stripe.Product;
     const productId = product.metadata?.productId;
 
     if (!productId) {
-      console.warn(" product with missing priductID:", product?.name);
+      console.warn(" product with missing productID:", product?.name);
       return null;
     }
 
@@ -68,6 +85,7 @@ export async function POST(req: Request) {
   })
   .filter((item): item is { productId: string; quantity: number; priceAtPurchase: number } => Boolean(item));
 
+    if (itemsToCreate.length > 0) {
    const order = await prisma.order.create({
   data: {
     userId: user.id,
@@ -78,7 +96,7 @@ export async function POST(req: Request) {
     payment: {
       create: {
         method: "STRIPE",
-        status: session.payment_status || "PAID",
+        status: paymentRef,
         amount: total,
         userId: user.id,
       },
@@ -98,6 +116,10 @@ await prisma.notification.create({
     link: `/product/${order.items[0].productId}`,
   },
 });
+
+    revalidatePath("/dashboard");
+    }
+    }
   }
 
   return NextResponse.json({ received: true });

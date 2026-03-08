@@ -7,6 +7,8 @@ import { UserHitRateChart } from "@/components/dashboard/userHitRate";
 import { DollarSign, FileText, Users, Boxes } from "lucide-react";
 import { DashboardData } from "@/actions/dashboardData";
 
+export const dynamic = "force-dynamic";
+
 const DashboardPage = async () => {
   const data = await DashboardData();
 

@@ -45,10 +45,11 @@ export default function ProfilSection() {
             variant="ghost"
             className="relative h-10 w-10 md:w-auto rounded-full p-0 flex items-center gap-2"
           >
-            <Avatar className="h-12 w-12 border">
+            <Avatar className="h-9 w-9 border shrink-0">
               <AvatarImage
                 src={session?.user?.image ?? ""}
                 alt={session?.user?.name ?? "user"}
+                className="object-cover"
               />
               <AvatarFallback className="bg-blue-100 text-blue-600 text-lg">
                 {session?.user?.name?.charAt(0)}

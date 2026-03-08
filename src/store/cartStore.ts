@@ -20,6 +20,9 @@ interface CartState {
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
   toggleSelected: (productId: string) => void;
+  selectAll: () => void;
+  deselectAll: () => void;
+  updateQuantity: (productId: string, quantity: number) => void;
   isItemSelected: (id: string) => boolean;
   setItems: (newItems: CartItem[]) => void;
   fetchAndSetCart: () => Promise<void>;
@@ -58,6 +61,25 @@ export const useCartStore = create<CartState>()(
             items: state.items.map((item) =>
               item.productId === productId
                 ? { ...item, isSelected: !item.isSelected }
+                : item
+            ),
+          })),
+
+        selectAll: () =>
+          set((state) => ({
+            items: state.items.map((item) => ({ ...item, isSelected: true })),
+          })),
+
+        deselectAll: () =>
+          set((state) => ({
+            items: state.items.map((item) => ({ ...item, isSelected: false })),
+          })),
+
+        updateQuantity: (productId: string, quantity: number) =>
+          set((state) => ({
+            items: state.items.map((item) =>
+              item.productId === productId
+                ? { ...item, quantity: Math.max(1, quantity) }
                 : item
             ),
           })),

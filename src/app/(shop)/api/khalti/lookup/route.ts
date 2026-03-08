@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { auth } from "@/app/auth";
+import { revalidatePath } from "next/cache";
 
 type OrderItemInput = {
   productId: string;
@@ -109,6 +110,8 @@ export async function POST(req: Request) {
           link: `/product/${order.items[0]?.productId}`,
         },
       });
+
+      revalidatePath("/dashboard");
 
       return NextResponse.json({ ...data, orderCreated: true, orderId: order.id });
     }
