@@ -140,7 +140,7 @@ export const updateProductDetails = async (
 
     const productData = parsedData.data;
 
-    const updatedProduct = await prisma.product.update({
+    const _updatedProduct = await prisma.product.update({
       where: {
         id: productId,
       },
