@@ -9,11 +9,9 @@ export async function GET() {
 
     const orders = await prisma.order.findMany({
       where: {
-        createdAt: {
-          gte: sixMonthsAgo,
-          lte: now,
-        },
+        createdAt: { gte: sixMonthsAgo, lte: now },
       },
+      select: { total: true, createdAt: true },
     });
 
     const monthlyEarnings = new Map();

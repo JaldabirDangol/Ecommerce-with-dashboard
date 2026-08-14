@@ -33,11 +33,11 @@ export const getCustomerListForAdmin = async () => {
         id: true,
         name: true,
         email: true,
+        _count: { select: { orders: true } },
         orders: {
-          select: {
-            createdAt: true,
-          },
-          orderBy: { createdAt: "desc" }, 
+          select: { createdAt: true },
+          orderBy: { createdAt: "desc" },
+          take: 1,
         },
       },
     });
@@ -46,11 +46,9 @@ export const getCustomerListForAdmin = async () => {
       id: user.id,
       name: user.name || "",
       email: user.email,
-      status: "Active", 
-      lastOrder: user.orders.length > 0 
-        ? user.orders[0].createdAt.toISOString().split("T")[0] 
-        : null,
-      totalOrders: user.orders.length,
+      status: "Active",
+      lastOrder: user.orders[0]?.createdAt.toISOString().split("T")[0] ?? null,
+      totalOrders: user._count.orders,
     }));
 
     return customers;

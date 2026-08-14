@@ -23,7 +23,7 @@ export default async function Categories() {
           rel="noopener noreferrer"
           className="flex flex-col items-center justify-center p-2 rounded-xl bg-main-300 hover:shadow-md transition"
         >
-          <div className="w-[80px] h-[80px] flex items-center justify-center overflow-hidden">
+          <div className="w-20 h-20 flex items-center justify-center overflow-hidden">
             <Image
               width={64}
               height={64}

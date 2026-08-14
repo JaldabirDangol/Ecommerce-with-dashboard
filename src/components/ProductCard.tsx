@@ -17,12 +17,12 @@ const ProductCard = ({imageUrl,name,rating,price,description,id}:ProductCardProp
      <div className='flex flex-col w-[320px] bg-main-300 my-2 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer'> 
        <div className="w-full flex justify-center items-center bg-white h-[250px] overflow-hidden rounded-t-2xl">
         <Image
-  width={64}
-  height={64}
+  width={320}
+  height={250}
   src={imageUrl ?? ""}
   alt={name}
   className="object-contain max-h-[90%] max-w-[90%] w-full"
-  unoptimized
+  sizes="320px"
 />
        </div>
        <div className='p-4 h-[190px]'>

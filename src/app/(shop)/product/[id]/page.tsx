@@ -7,6 +7,9 @@ import { notFound } from "next/navigation";
 import WishlistButton from "@/components/wishListButton";
 import { WishlistItem } from "@/types/product";
 import ProductDescription from "@/components/productDescription";
+import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const resolvedParams = await params;
@@ -71,7 +74,9 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
         <KeySpecification product={product} />
       </article>
 
-      <ReviewSection id={resolvedParams.id} />
+      <Suspense fallback={<div className="h-48 animate-pulse bg-gray-100 rounded-xl" />}>
+        <ReviewSection id={resolvedParams.id} />
+      </Suspense>
     </section>
   );
 };

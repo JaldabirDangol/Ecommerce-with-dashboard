@@ -52,6 +52,49 @@ export async function updateCartItem(data: {
   }
 }
 
+/** Add multiple items to the cart in a single round-trip (used by "Move All to Cart"). */
+export async function batchAddToCart(items: { productId: string; quantity: number }[]) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("User not authenticated");
+
+  const userId = session.user.id;
+
+  if (!items.length) return { success: true, message: "Nothing to add" };
+
+  let cart = await prisma.cart.findUnique({ where: { userId } });
+  if (!cart) {
+    cart = await prisma.cart.create({ data: { userId } });
+  }
+
+  // Fetch existing items for this cart in one query
+  const existingItems = await prisma.cartItem.findMany({
+    where: { cartId: cart.id, productId: { in: items.map((i) => i.productId) } },
+    select: { id: true, productId: true },
+  });
+
+  const existingMap = new Map(existingItems.map((e) => [e.productId, e.id]));
+
+  await prisma.$transaction([
+    // Update existing items
+    ...existingItems.map((e) =>
+      prisma.cartItem.update({
+        where: { id: e.id },
+        data: { quantity: items.find((i) => i.productId === e.productId)?.quantity ?? 1 },
+      })
+    ),
+    // Create new items in bulk
+    prisma.cartItem.createMany({
+      data: items
+        .filter((i) => !existingMap.has(i.productId))
+        .map((i) => ({ cartId: cart.id, productId: i.productId, quantity: i.quantity })),
+      skipDuplicates: true,
+    }),
+  ]);
+
+  revalidatePath("/cart");
+  return { success: true, message: "All items added to cart" };
+}
+
 
 export async function deleteCartItem(cartItemId: string) {
     const session = await auth();
@@ -65,18 +108,14 @@ export async function deleteCartItem(cartItemId: string) {
     }
 
     try {
-        const cartItemToDelete = await prisma.cartItem.findUnique({
-            where: { id: cartItemId },
-            include: { cart: true },
+        // Use deleteMany with ownership check to avoid an extra round-trip
+        const deleted = await prisma.cartItem.deleteMany({
+            where: { id: cartItemId, cart: { userId } },
         });
 
-        if (!cartItemToDelete || cartItemToDelete.cart.userId !== userId) {
+        if (deleted.count === 0) {
             throw new Error("Forbidden: You do not own this cart item");
         }
-
-        await prisma.cartItem.delete({
-            where: { id: cartItemId }
-        });
 
         revalidatePath('/cart');
         return { message: "Item deleted successfully" };

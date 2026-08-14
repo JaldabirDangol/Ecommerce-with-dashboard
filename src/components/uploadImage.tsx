@@ -32,7 +32,7 @@ export default function ImageUpload() {
 
   return (
     <div className="flex flex-col items-center gap-4 w-full h-full">
-      <div className="relative w-full max-w-[400px] h-[350px] flex flex-wrap justify-center items-center gap-2 p-2">
+      <div className="relative w-full max-w-100 h-87.5 flex flex-wrap justify-center items-center gap-2 p-2">
         {localImages.length > 0 ? (
           localImages.slice(0, 4).map((url, index) => (
             <div key={url} className="relative w-[48%] h-[48%] rounded-lg overflow-hidden">

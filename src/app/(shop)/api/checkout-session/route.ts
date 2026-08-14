@@ -2,9 +2,11 @@ import { auth } from "@/app/auth";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-08-27.basil", 
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2025-08-27.basil",
+  });
+}
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -42,7 +44,7 @@ export async function POST(req: Request) {
       quantity: item.quantity,
     }));
 
-    const checkoutSession = await stripe.checkout.sessions.create({
+    const checkoutSession = await getStripe().checkout.sessions.create({
       payment_method_types: ["card"],
       line_items,
       mode: "payment",

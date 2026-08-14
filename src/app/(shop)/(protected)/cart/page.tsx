@@ -5,6 +5,8 @@ import OrderSummary from "@/components/orderSummary";
 import { CartInitializer } from "@/components/cartInitializer";
 import CartActions from "@/components/client/cartActions";
 
+export const dynamic = "force-dynamic";
+
 const cartFetcher = async () => {
   const session = await auth();
   if (!session?.user?.id) {

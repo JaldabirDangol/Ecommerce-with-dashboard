@@ -19,9 +19,13 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
     }
 
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-    });
+    const userId = session.user.id;
+
+    // Run product existence check and wishlist lookup in parallel
+    const [product, wishlist] = await Promise.all([
+      prisma.product.findUnique({ where: { id: productId }, select: { id: true } }),
+      prisma.wishlist.findUnique({ where: { userId } }),
+    ]);
 
     if (!product) {
       return NextResponse.json(
@@ -30,40 +34,25 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const userId = session.user.id;
+    if (wishlist) {
+      const exists = await prisma.wishlistItem.findFirst({
+        where: { wishlistId: wishlist.id, productId },
+        select: { id: true },
+      });
 
-    const wishlist = await prisma.wishlist.findUnique({
-      where: { userId },
-    });
-
-  if (wishlist) {
-  const exists = await prisma.wishlistItem.findFirst({
-    where: { wishlistId: wishlist.id, productId },
-  });
-
-  if (!exists) {
-    await prisma.wishlist.update({
-      where: { userId },
-      data: {
-        items: {
-          create: { productId },
-        },
-      },
-    });
-  } else {
-    return NextResponse.json({ success: true, message: "Product already in wishlist" }, { status: 200 });
-  }
-} else {
-  await prisma.wishlist.create({
-    data: {
-      userId,
-      items: {
-        create: { productId },
-      },
-    },
-  });
-}
-
+      if (!exists) {
+        await prisma.wishlist.update({
+          where: { userId },
+          data: { items: { create: { productId } } },
+        });
+      } else {
+        return NextResponse.json({ success: true, message: "Product already in wishlist" }, { status: 200 });
+      }
+    } else {
+      await prisma.wishlist.create({
+        data: { userId, items: { create: { productId } } },
+      });
+    }
 
     return NextResponse.json({ success: true, message: "Wishlist updated" }, { status: 200 });
   } catch (error) {
@@ -83,14 +72,14 @@ export const GET = async () => {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const wishlist = await prisma.wishlist.findUnique({
-      where: {
-        userId: session.user.id,
-      },
+      where: { userId: session.user.id },
       include: {
-        items:{
-          include:{
-            product:true
-          }
+        items: {
+          include: {
+            product: {
+              select: { id: true, name: true, price: true, images: true, description: true, updatedAt: true },
+            },
+          },
         },
       },
     });

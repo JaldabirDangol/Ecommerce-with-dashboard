@@ -1,56 +1,31 @@
-import { prisma } from "@/lib/db";
 import { Review, User } from "@prisma/client";
 import { auth } from "@/app/auth";
 import ReviewForm from "@/components/reviewForm";
 import { FaStar } from "react-icons/fa";
+import { unstable_cache } from "next/cache";
+import { prisma } from "@/lib/db";
 
 // Type definition for a review including the user's name
 type ReviewWithUser = Review & {
   user: Pick<User, "name" | "id">;
 };
 
-const reviewFetcher = async (id: string) => {
-  const productReviews = await prisma.product.findUnique({
-    where: { id },
-    include: {
-      reviews: {
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-    },
-  });
-
-  return productReviews;
-};
+const getReviews = (id: string) =>
+  unstable_cache(
+    () =>
+      prisma.review.findMany({
+        where: { productId: id },
+        include: { user: { select: { id: true, name: true } } },
+        orderBy: { createdAt: "desc" },
+      }),
+    [`reviews-${id}`],
+    { revalidate: 60, tags: [`reviews-${id}`] }
+  )();
 
 const ReviewSection = async ({ id }: { id: string }) => {
-  const product = await reviewFetcher(id);
+  const reviews = (await getReviews(id)) as ReviewWithUser[];
   const session = await auth();
   const userId = session?.user?.id;
-
-  if (!product || !product.reviews) {
-    return (
-      <div className="w-full flex flex-col p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800 text-center">
-          Customer Reviews
-        </h2>
-        <div className="mt-4 text-center text-gray-500">
-          No reviews found for this product.
-        </div>
-      </div>
-    );
-  }
-
-  const reviews = product.reviews as ReviewWithUser[];
   const totalRatings = reviews.length;
   const averageRating =
     totalRatings > 0

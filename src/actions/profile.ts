@@ -105,7 +105,7 @@ export const updateUserData = async (
 
  
 
-export type SuccessUserData = User & {
+export type SuccessUserData = Omit<User, "password"> & {
   defaultAddress: Address | null;
   shippingAddress: Address | null;
 };
@@ -127,7 +127,22 @@ export const initialUserData = async (): Promise<initialUserDataType> => {
 
     const userData = await prisma.user.findUnique({
       where: { id: session.user.id },
-      include: { defaultAddress: true, shippingAddress: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        emailVerified: true,
+        image: true,
+        username: true,
+        phoneNumber: true,
+        role: true,
+        defaultAddressId: true,
+        shippingAddressId: true,
+        createdAt: true,
+        updatedAt: true,
+        defaultAddress: true,
+        shippingAddress: true,
+      },
     });
 
     if (!userData) {

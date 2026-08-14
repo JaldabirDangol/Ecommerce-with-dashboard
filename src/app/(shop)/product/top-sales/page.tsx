@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@prisma/client";
 
+export const dynamic = "force-dynamic";
+
 export default async function TopSalesPage() {
   const products: Product[] = await prisma.product.findMany({
     orderBy: { price: "desc" },

@@ -7,7 +7,7 @@ import { useWishListStore } from "@/store/wishListStore";
 import { CartItem, WishlistItem } from "@/types/product";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/store/cartStore";
-import { updateCartItem } from "@/actions/cart";
+import { updateCartItem, batchAddToCart } from "@/actions/cart";
 import { toast } from "sonner";
 
 const WishlistPage = () => {
@@ -45,26 +45,23 @@ const WishlistPage = () => {
   };
 
   const handleMoveAllToCart = async () => {
-    for (const item of items) {
-      const cartItem: CartItem = {
-        productId: item.id,
-        productName: item.name,
-        quantity: 1,
-        price: item.price,
-        description: item.description || "",
-      };
+    const result = await batchAddToCart(
+      items.map((item) => ({ productId: item.id, quantity: 1 }))
+    );
 
-      const result = await updateCartItem({
-        productId: item.id,
-        quantity: 1,
+    if (result.success) {
+      items.forEach((item) => {
+        addToCart({
+          productId: item.id,
+          productName: item.name,
+          quantity: 1,
+          price: item.price,
+          description: item.description || "",
+        });
+        removeFromWishList(item.id);
       });
-
-      if (result.success) {
-        addToCart(cartItem);
-      }
+      toast(result.message);
     }
-
-    items.forEach((item) => removeFromWishList(item.id));
   };
 
   return (

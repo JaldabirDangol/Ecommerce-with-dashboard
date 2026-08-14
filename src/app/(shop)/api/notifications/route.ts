@@ -10,7 +10,10 @@ export async function GET() {
   const notifications = await prisma.notification.findMany({
     where: { userId: session?.user?.id },
     orderBy: { createdAt: "desc" },
+    take: 50,
   });
 
-  return NextResponse.json(notifications);
+  return NextResponse.json(notifications, {
+    headers: { "Cache-Control": "private, max-age=20, stale-while-revalidate=40" },
+  });
 }

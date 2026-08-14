@@ -4,9 +4,11 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/app/auth";
 import { revalidatePath } from "next/cache";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-08-27.basil",
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2025-08-27.basil",
+  });
+}
 
 async function getUserId(): Promise<string> {
   const session = await auth();
@@ -25,16 +27,16 @@ export async function GET(
   try {
     const userId = await getUserId();
     const { sessionId } = await params;
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await getStripe().checkout.sessions.retrieve(sessionId);
 
-    const lineItems = await stripe.checkout.sessions.listLineItems(sessionId, {
+    const lineItems = await getStripe().checkout.sessions.listLineItems(sessionId, {
       expand: ["data.price.product"],
       limit: 100,
     });
 
     let receiptUrl: string | null = null;
     if (typeof session.payment_intent === "string") {
-      const pi = await stripe.paymentIntents.retrieve(session.payment_intent, {
+      const pi = await getStripe().paymentIntents.retrieve(session.payment_intent, {
         expand: ["latest_charge"],
       });
       const charge = pi.latest_charge;

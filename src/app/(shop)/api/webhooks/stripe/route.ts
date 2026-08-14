@@ -4,10 +4,11 @@ import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-08-27.basil", // use stable API
-});
-
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2025-08-27.basil",
+  });
+}
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = getStripe().webhooks.constructEvent(
       body,
       sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
       return new NextResponse("User not found", { status: 404 });
     }
 
-    const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+    const lineItems = await getStripe().checkout.sessions.listLineItems(session.id, {
       expand: ["data.price.product"],
     });
    

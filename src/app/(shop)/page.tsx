@@ -3,13 +3,17 @@ import { Hovercard } from "@/components/hoverCard";
 import JustForYou from "@/components/justForYou";
 import { ProductFeatureCard } from "@/components/productfeaturecard";
 import { prisma } from "@/lib/db";
+import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default async function ShopPage() {
 
   const product1 = await prisma.product.findUnique({
     where:{
       id:"cmf1k7lcs000kh1ggxmroo74o"
-    }
+    },
+    select: { id: true },
   })
 
   return (
@@ -38,10 +42,14 @@ export default async function ShopPage() {
 />
       </div>
 </div>
-  
-  <Categories/>
 
+  <Suspense fallback={<div className="h-32 animate-pulse bg-gray-100 rounded-xl" />}>
+    <Categories/>
+  </Suspense>
+
+  <Suspense fallback={<div className="h-64 animate-pulse bg-gray-100 rounded-xl" />}>
     <JustForYou/>
+  </Suspense>
 
     </div>
   );

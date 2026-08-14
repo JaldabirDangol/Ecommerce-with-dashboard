@@ -13,7 +13,11 @@ export async function GET() {
       where: { userId: session.user.id },
       include: {
         items: {
-          include: { product: true },
+          include: {
+            product: {
+              select: { id: true, name: true, description: true, price: true, images: true },
+            },
+          },
         },
       },
     });
