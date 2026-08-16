@@ -38,6 +38,13 @@ FROM base AS runner
 
 WORKDIR /app
 
+# The Prisma CLI (as opposed to @prisma/client) is a devDependency, so
+# Next's standalone output tracing prunes it - it's never imported by
+# server code, only run manually. Install it globally here so
+# `prisma migrate deploy` works from this image at deploy time without
+# reaching out to npm over the network.
+RUN npm install -g prisma@6.19.1
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

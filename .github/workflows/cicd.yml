@@ -126,6 +126,10 @@ jobs:
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
+            # Apply any pending migrations against the now-healthy db.
+            # No-op if the schema is already up to date.
+            docker compose -f docker-compose.prod.yml exec -T app prisma migrate deploy
+
             # Basic health check before cleaning up the old image
             sleep 5
             curl -fsS http://localhost:3003 > /dev/null || (docker compose -f docker-compose.prod.yml logs --tail=50 app && exit 1)
