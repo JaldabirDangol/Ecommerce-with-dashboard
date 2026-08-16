@@ -1,0 +1,32 @@
+# Runs ONLY on the EC2 instance. It never builds — it pulls the image
+# that GitHub Actions already built and pushed to Docker Hub.
+#
+# Real runtime secrets (DATABASE_URL, NEXTAUTH_SECRET, STRIPE_SECRET_KEY,
+# CLOUDINARY_API_SECRET, etc.) live in the .env file next to this file on
+# the EC2 instance ONLY. That .env file is never created or touched by CI —
+# you manage it by hand (or via a secrets manager) directly on the server.
+#
+# IMAGE_TAG is injected by the deploy step over SSH (see cicd.yml) so each
+# deploy pins the exact commit SHA that was tested and built — "latest" is
+# only a fallback for manual `docker compose up` runs.
+
+services:
+  app:
+    image: jaldabir/ecommerce-app:${IMAGE_TAG:-latest}
+    container_name: ecommerce-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

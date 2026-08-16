@@ -1,0 +1,70 @@
+# syntax=docker/dockerfile:1
+
+#############################################
+# 1. deps — install dependencies only
+#############################################
+FROM node:20-alpine AS deps
+RUN corepack enable && corepack prepare pnpm@10 --activate
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+#############################################
+# 2. builder — compile the Next.js app
+#############################################
+FROM node:20-alpine AS builder
+RUN corepack enable && corepack prepare pnpm@10 --activate
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# --- Build-time args ---
+# NEXT_PUBLIC_* values get compiled directly into the client JS bundle
+# right now, during `pnpm build`. Whatever is passed here is PERMANENT
+# for this image — there is no way to change them later without rebuilding.
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ARG NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+ARG NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY \
+    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=$NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET \
+    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=$NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+
+# Non-public vars (DATABASE_URL, NEXTAUTH_SECRET, etc.) are NOT declared as
+# ARG here on purpose. `next build` may still touch process.env for these
+# (e.g. a config file that reads NEXTAUTH_SECRET at import time), so give it
+# harmless dummy values just so the build doesn't crash. These values are
+# NEVER baked into the client bundle and are fully overridden at container
+# start by the real values in EC2's .env file — see docker-compose.yml.
+ENV DATABASE_URL="postgresql://build:build@localhost:5432/build" \
+    NEXTAUTH_SECRET="build-time-placeholder" \
+    NEXTAUTH_URL="http://localhost:3000"
+
+RUN pnpm build
+
+#############################################
+# 3. runner — minimal production image
+#############################################
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+
+# Next.js "standalone" output — requires `output: "standalone"` in next.config.js
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Real DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL, and any server-only
+# secrets are injected at `docker run` / `docker compose up` time via
+# env_file, NOT set here. Next.js reads process.env live on the server
+# for every non-NEXT_PUBLIC_ variable.
+CMD ["node", "server.js"]
