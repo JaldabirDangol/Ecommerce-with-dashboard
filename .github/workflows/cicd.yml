@@ -134,4 +134,8 @@ jobs:
             sleep 5
             curl -fsS http://localhost:3003 > /dev/null || (docker compose -f docker-compose.prod.yml logs --tail=50 app && exit 1)
 
-            docker image prune -f
+            # -a also removes old tagged (not just dangling) images no
+            # container references anymore - each deploy leaves behind a
+            # new SHA-tagged image, and "prune -f" alone never reclaims
+            # those, which is what filled the disk.
+            docker image prune -af
