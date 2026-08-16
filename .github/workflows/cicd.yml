@@ -118,18 +118,12 @@ jobs:
             cd ~/ecommerce-app
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-            # Pin this deploy to the exact commit that was just built -
-            # this is what makes rollback possible (redeploy an old SHA).
+
             export IMAGE_TAG=${{ github.sha }}
 
-            # Free port 3003 if anything is still bound to it - guards
-            # against leftover containers from before container_name was
-            # pinned (compose only auto-replaces containers it recognizes
-            # as the same service; a stray old one won't get stopped by
-            # `up`, so it would otherwise block the new container forever).
             docker ps -q --filter "publish=3003" | xargs -r docker rm -f
 
-            docker compose -f docker-compose.prod.yml pull app
+            docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
             # Basic health check before cleaning up the old image
