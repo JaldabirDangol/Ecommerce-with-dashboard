@@ -122,11 +122,18 @@ jobs:
             # this is what makes rollback possible (redeploy an old SHA).
             export IMAGE_TAG=${{ github.sha }}
 
+            # Free port 3003 if anything is still bound to it - guards
+            # against leftover containers from before container_name was
+            # pinned (compose only auto-replaces containers it recognizes
+            # as the same service; a stray old one won't get stopped by
+            # `up`, so it would otherwise block the new container forever).
+            docker ps -q --filter "publish=3003" | xargs -r docker rm -f
+
             docker compose -f docker-compose.prod.yml pull app
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
             # Basic health check before cleaning up the old image
             sleep 5
-            curl -fsS http://localhost:3000 > /dev/null || (docker compose -f docker-compose.prod.yml logs --tail=50 app && exit 1)
+            curl -fsS http://localhost:3003 > /dev/null || (docker compose -f docker-compose.prod.yml logs --tail=50 app && exit 1)
 
             docker image prune -f
